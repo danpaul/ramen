@@ -2,23 +2,11 @@
 
 require_once($GLOBALS['config']['views']. '/_head.php');
 
-// echo var_dump($_category_list);
-// die();
 
-$_category_list = 'foo';
-$test = 'bar';
-
-function display_categories($categories, $top_level = TRUE){
-
-globals $_category_list, $test;
-// echo var_dump($_category_list);
-echo var_dump($test);
-die();
-// echo var_dump($GLOBALS['_category_list']);
+function display_categories($categories, $category_list, $top_level = TRUE){
 
 	echo '<ul>';
 		foreach ($categories as $category_data) {
-
 			if( ($top_level && $category_data['parent'] ===  NULL) || !$top_level )
 			{
 				echo '<li>';
@@ -37,25 +25,28 @@ die();
 					<input type="submit" value="delete" />
 				</form>
 
-
-<form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/taxonomy-move-category'; ?>" method="post">
-	Move to new parent:
-		<select name="new_parent_id">
-			<option value=""></option>
-			<?php
-				foreach ($_category_list as $category) {
-					echo '<option value="'. $category['id']. '">'. $category['name']. '</option>';					
-				}
-			?>
-		</select>
-	<input type="submit" value="move" />
-</form>
+				<form class ="inline" action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/taxonomy-move-category'; ?>" method="post">
+					Move to parent:
+						<select name="new_parent_id">
+							<option value=""></option>
+							<?php
+								foreach ($category_list as $category) {
+									if( $category_data['id'] !== $category['id'] )
+									{
+										echo '<option value="'. $category['id']. '">'. $category['name']. '</option>';
+									}
+								}
+							?>
+						</select>
+						<input type="hidden" name="id" value="<?php echo $category_data['id'] ?>" />
+					<input type="submit" value="move" />
+				</form>
 
 				<?php
 
 					if( !empty($category_data['subcategories']) )
 					{
-						display_categories($category_data['subcategories'], FALSE);
+						display_categories($category_data['subcategories'], $category_list, FALSE);
 					}
 				echo '</li>';
 			}
@@ -66,7 +57,8 @@ die();
 ?>
 
 <h2>categories:</h2>
-<?php display_categories($_categories); ?>
+
+<?php display_categories($_categories, $_category_list); ?>
 
 <h2>add category</h2>
 <form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/taxonomy-add-category'; ?>" method="post">

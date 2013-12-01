@@ -150,8 +150,19 @@ class Admin_controller extends Base_controller
 
 	public function move_category()
 	{
-		
-
+		require_once $GLOBALS['config']['models']. '/taxonomy.php';
+		$new_parent_id = NULL;
+		if( $_POST['new_parent_id'] !== '' )
+		{
+			$new_parent_id = $_POST['new_parent_id'];
+		}
+		$taxonomy = new Taxonomy_model;
+		if( !$taxonomy->move_category($_POST['id'], $new_parent_id) )
+		{
+			echo self::ERROR_RECORD_SAVE;
+		}else{
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/admin/taxonomies');
+		}
 	}
 
 /*******************************************************************************
