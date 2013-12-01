@@ -33,6 +33,9 @@ switch($_SERVER['REQUEST_METHOD'])
 					case 'edit-product':
 						$admin->get_edit_product(get_param($params, 2));
 						goto end;
+					case 'delete-product':
+						$admin->get_delete_product(get_param($params, 2));
+						goto end;
 					case 'products':
 						$admin->get_products();
 						goto end;
@@ -92,6 +95,9 @@ switch($_SERVER['REQUEST_METHOD'])
 						goto end;
 					case 'edit-product':
 						$admin->post_edit_product(get_param($params, 2));
+						goto end;
+					case 'delete-product':
+						$admin->post_delete_product();
 						goto end;
 					case 'taxonomy-add-category':
 						$admin->add_category();

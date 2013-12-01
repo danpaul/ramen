@@ -20,7 +20,8 @@
 				echo '<th>'. $key. '</th>';
 			}
 
-			echo '<th>edit</edit>';
+			echo '<th>edit</th>';
+			echo '<th>delete</th>';
 
 			foreach ($_products as $product){
 				echo '<tr>';
@@ -28,6 +29,7 @@
 						echo '<td>'. $value. '</td>';
 					}
 					echo '<td><a href="'. $GLOBALS['config']['site_root_url']. '/admin/edit-product/'. $product['id']. '">edit</a></td>';
+					echo '<td><a href="'. $GLOBALS['config']['site_root_url']. '/admin/delete-product/'. $product['id']. '">delete</a></td>';
 				echo '</tr>';
 			}
 		?>

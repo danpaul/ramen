@@ -24,6 +24,14 @@ class Admin_controller extends Base_controller
 
 *******************************************************************************/
 
+	public function get_products()
+	{
+		require_once $GLOBALS['config']['models']. '/product.php';
+		$product = new Product_model();
+		$_products = $product->get_products();
+		require_once($GLOBALS['config']['views']. '/admin_product_all.php');
+	}
+
 	public function get_add_product()
 	{
 		require_once $GLOBALS['config']['models']. '/taxonomy.php';
@@ -69,12 +77,24 @@ class Admin_controller extends Base_controller
 		}
 	}
 
-	public function get_products()
+	public function get_delete_product($id)
 	{
 		require_once $GLOBALS['config']['models']. '/product.php';
 		$product = new Product_model();
-		$_products = $product->get_products();
-		require_once($GLOBALS['config']['views']. '/admin_product_all.php');
+		$_product = $product->get_product($id);
+		require_once($GLOBALS['config']['views']. '/admin_product_delete.php');
+	}
+
+	public function post_delete_product()
+	{
+		require_once $GLOBALS['config']['models']. '/product.php';
+		$product = new Product_model();
+		if( $product->delete($_POST['id']) )
+		{
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/admin/products');
+		}else{
+			echo self::ERROR_RECORD_SAVE;
+		}
 	}
 
 /*******************************************************************************

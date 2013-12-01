@@ -90,7 +90,7 @@ class Taxonomy_model extends Base_model
 		array_push($to_delete, $id);
 		$questionmarks = str_repeat("?,", count($to_delete)-1) . "?";
 		$stmt = $this->db->prepare("DELETE FROM Categories WHERE id IN ($questionmarks)");
-		return $stmt->execute($to_delete);
+		if( !$stmt->execute($to_delete) ){ return FALSE; }
 	}
 
 	public function move_category($id, $new_parent)

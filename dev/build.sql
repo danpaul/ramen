@@ -102,17 +102,17 @@ CREATE TABLE IF NOT EXISTS ProductTags
 	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	tag_id int NOT NULL,
 	product_id int NOT NULL,
-	FOREIGN KEY (tag_id) REFERENCES Tags(id),
-	FOREIGN KEY (product_id) REFERENCES Products(id)
+	FOREIGN KEY (tag_id) REFERENCES Tags(id) ON DELETE CASCADE,
+	FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS CategoryTags
+CREATE TABLE IF NOT EXISTS ProductCategories
 (
 	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	category_id int NOT NULL,
 	product_id int NOT NULL,
-	FOREIGN KEY (category_id) REFERENCES Categories(id),
-	FOREIGN KEY (product_id) REFERENCES Products(id)
+	FOREIGN KEY (category_id) REFERENCES Categories(id) ON DELETE CASCADE,
+	FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
 );
 
 ALTER TABLE Users ADD salt VARCHAR(32) NOT NULL;
