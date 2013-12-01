@@ -17,7 +17,6 @@ class Taxonomy_model extends Base_model
 	const STATEMENT_INSERT_TAG = 'INSERT INTO Tags(category, type, name) VALUES (:category, :type, :name)';
 	const STATEMENT_SELECT_ALL_TAGS = 'SELECT * FROM Tags WHERE category=:category';
 	const STATEMENT_UPDATE_TAG_NAME = 'UPDATE Tags SET name=:new_name WHERE category=:category AND type=:type AND name=:name';
-
 	
 	public function __construct()
 	{
@@ -29,7 +28,6 @@ class Taxonomy_model extends Base_model
 						CATEGORY
 
 ********************************************************************************/
-
 
 	// http://stackoverflow.com/questions/4843945/php-tree-structure-for-categories-and-sub-categories-without-looping-a-query
 	public function build_category_tree(&$categories) {

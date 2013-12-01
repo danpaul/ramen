@@ -75,7 +75,7 @@ function display_categories($categories, $category_list, $top_level = TRUE){
 	<input type="submit" value="add" />
 </form>
 
-<h2>tags</h2>
+<h2>tags:</h2>
 
 <?php foreach ($_tags as $type => $members) { ?>
 

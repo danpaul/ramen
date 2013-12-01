@@ -26,6 +26,11 @@ class Admin_controller extends Base_controller
 
 	public function get_add_product()
 	{
+		require_once $GLOBALS['config']['models']. '/taxonomy.php';
+		$taxonomy = new Taxonomy_model();
+		$_categories = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
+		$_tags = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
+
 		require_once($GLOBALS['config']['views']. '/admin_product_add.php');
 	}
 
@@ -33,7 +38,6 @@ class Admin_controller extends Base_controller
 	{
 		require_once $GLOBALS['config']['models']. '/product.php';
 		$product = new Product_model();
-
 		if($product->add_product($_POST)){
 			$_SESSION['flash_message'] = array(self::SUCCESS_RECORD_SAVE);
 			header('Location: '. $GLOBALS['config']['site_root_url']. '/admin/products');
@@ -178,6 +182,7 @@ class Admin_controller extends Base_controller
 		$taxonomy->add_tag(self::PRODUCT_CATEGORY_TYPE,
 						   $_POST['type'], 
 						   $_POST['name']);
+		header('Location: '. $GLOBALS['config']['site_root_url']. '/admin/taxonomies');
 	}
 
 	public function delete_tag()

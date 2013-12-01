@@ -6,8 +6,12 @@ class Product_model extends Base_model
 {
 	const STATEMENT_GET_PRODUCT = 'SELECT * FROM Products WHERE id=:id LIMIT 1';
 	const STATEMENT_GET_PRODUCTS = 'SELECT * FROM Products';
+	
 	const STATEMENT_INSERT_PRODUCT = 'INSERT INTO Products(name, description, price, inventory) VALUES (:name, :description, :price, :inventory)';
 	const STATEMENT_UPDATE_PRODUCT = 'UPDATE Products SET name=:name, description=:description, price=:price, inventory=:inventory WHERE id=:id';
+
+	const STATEMENT_INSERT_PRODUCT_TAG = 'INSERT INTO ProductTags(product_id, tag_id) VALUES (:product_id, :tag_id)';
+	const STATEMENT_INSERT_PRODUCT_CATEGORY = 'INSERT INTO ProductCategories(product_id, tag_id) VALUES (:product_id, :tag_id)';
 
 	public function __construct()
 	{
@@ -17,12 +21,31 @@ class Product_model extends Base_model
 	public function add_product($product_details)
 	{
 		$product_details = $this->type_set_params($product_details);
-		$statement = $this->db->prepare(self::STATEMENT_INSERT_PRODUCT);		
-		if($statement->execute($product_details))
+
+		$product = $this->type_set_params($product_details['product']);
+
+		$statement = $this->db->prepare(self::STATEMENT_INSERT_PRODUCT);
+		if( !$statement->execute($product) ){ return FALSE; }
+
+		$product_id = $this->db->lastInsertId();
+
+		if( !empty($product_details['tags']) )
 		{
-			return TRUE;
+			$statement = $this->db->prepare(self::STATEMENT_INSERT_PRODUCT_TAG);
+			foreach ($product_details['tags'] as $tag_id)
+			{
+				if( !$statement->execute(array('product_id' => $product_id, 'tag_id' => $tag_id)) )
+				{
+					return FAlSE;
+				}
+			}
 		}
-		return FALSE;
+
+		if( !empty($product_details['categories']))
+		{
+
+		}
+		return TRUE;
 	}
 
 	public function edit($id, $params)

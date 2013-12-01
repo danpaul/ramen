@@ -97,4 +97,22 @@ CREATE TABLE IF NOT EXISTS Tags
 	INDEX (name)
 );
 
+CREATE TABLE IF NOT EXISTS ProductTags
+(
+	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	tag_id int NOT NULL,
+	product_id int NOT NULL,
+	FOREIGN KEY (tag_id) REFERENCES Tags(id),
+	FOREIGN KEY (product_id) REFERENCES Products(id)
+);
+
+CREATE TABLE IF NOT EXISTS CategoryTags
+(
+	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	category_id int NOT NULL,
+	product_id int NOT NULL,
+	FOREIGN KEY (category_id) REFERENCES Categories(id),
+	FOREIGN KEY (product_id) REFERENCES Products(id)
+);
+
 ALTER TABLE Users ADD salt VARCHAR(32) NOT NULL;
