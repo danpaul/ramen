@@ -1,0 +1,3 @@
+adjust param parser in index file to reflect root relative
+
+change mysql encoding: http://stackoverflow.com/questions/367711/what-is-the-best-collation-to-use-for-mysql-with-php
