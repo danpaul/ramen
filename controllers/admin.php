@@ -58,8 +58,19 @@ class Admin_controller extends Base_controller
 	public function get_edit_product($id)
 	{
 		require_once $GLOBALS['config']['models']. '/product.php';
+		require_once $GLOBALS['config']['models']. '/taxonomy.php';
+		
 		$product = new Product_model();
+		$taxonomy = new Taxonomy_model();
+
 		$_product = $product->get_product($id);
+		$_product_tags = $product->get_product_tags($id);
+		$_product_categories = $product->get_product_categories($id);
+
+		$_categories = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
+		$_category_list = $taxonomy->get_category_list(self::PRODUCT_CATEGORY_TYPE);
+		$_tags = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
+
 		require_once($GLOBALS['config']['views']. '/admin_product_edit.php');
 	}
 
@@ -110,6 +121,7 @@ class Admin_controller extends Base_controller
 		$_categories = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
 		$_category_list = $taxonomy->get_category_list(self::PRODUCT_CATEGORY_TYPE);
 		$_tags = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
+
 		//Add empty tag categories
 		foreach ($this->tag_types as $tag_type)
 		{

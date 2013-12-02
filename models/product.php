@@ -15,6 +15,9 @@ class Product_model extends Base_model
 	const STATEMENT_INSERT_PRODUCT_TAG = 'INSERT INTO ProductTags(product_id, tag_id) VALUES (:product_id, :tag_id)';
 	const STATEMENT_INSERT_PRODUCT_CATEGORY = 'INSERT INTO ProductCategories(product_id, category_id) VALUES (:product_id, :category_id)';
 
+	const STATEMENT_SELECT_PRODUCT_TAGS = 'SELECT * FROM ProductTags WHERE product_id=:product_id';
+	const STATEMENT_SELECT_PRODUCT_CATEGORIES = 'SELECT * FROM ProductCategories WHERE product_id=:product_id';
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -87,6 +90,39 @@ class Product_model extends Base_model
 			return $results;
 		}
 	}
+
+	public function get_product_tags($product_id)
+	{
+		$tags = array();
+
+		$statement = $this->db->prepare(self::STATEMENT_SELECT_PRODUCT_TAGS);
+		$statement->execute(array('product_id' => $product_id));
+		$results = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach ($results as $product_tag)
+		{
+			array_push($tags, $product_tag['id']);
+		}
+
+		return $tags;
+	}
+
+	public function get_product_categories($product_id)
+	{
+		$categories = array();
+
+		$statement = $this->db->prepare(self::STATEMENT_SELECT_PRODUCT_CATEGORIES);
+		$statement->execute(array('product_id' => $product_id));
+		$results = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+		foreach ($results as $product_category)
+		{
+			array_push($categories, $product_category['id']);
+		}
+
+		return $categories;
+	}
+	
 
 	public function delete($id)
 	{
