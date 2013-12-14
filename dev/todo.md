@@ -8,7 +8,6 @@ have tag delete/rename just pass id instead of type
 
 
 
-
 create login for admin
 
 add tag attributes to admin/product

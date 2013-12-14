@@ -8,6 +8,8 @@ class Product_model extends Base_model
 	const STATEMENT_GET_PRODUCTS = 'SELECT * FROM Products';
 
 	const STATEMENT_DELETE_PRODUCT = 'DELETE FROM Products WHERE id=:id';
+	const STATEMENT_DELETE_PRODUCT_CATEGORIES = 'DELETE FROM ProductCategories WHERE product_id=:product_id';
+	const STATEMENT_DELETE_PRODUCT_TAGS = 'DELETE FROM ProductTags WHERE product_id=:product_id';
 
 	const STATEMENT_INSERT_PRODUCT = 'INSERT INTO Products(name, description, price, inventory) VALUES (:name, :description, :price, :inventory)';
 	const STATEMENT_UPDATE_PRODUCT = 'UPDATE Products SET name=:name, description=:description, price=:price, inventory=:inventory WHERE id=:id';
@@ -17,6 +19,8 @@ class Product_model extends Base_model
 
 	const STATEMENT_SELECT_PRODUCT_TAGS = 'SELECT * FROM ProductTags WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_CATEGORIES = 'SELECT * FROM ProductCategories WHERE product_id=:product_id';
+	const STATEMENT_SELECT_PRODUCT_CATEGORY_IDS = 'SELECT category_id FROM ProductCategories WHERE product_id=:product_id';
+	const STATEMENT_SELECT_PRODUCT_TAG_IDS = 'SELECT tag_id FROM ProductTags WHERE product_id=:product_id';
 
 	public function __construct()
 	{
@@ -60,12 +64,15 @@ class Product_model extends Base_model
 		return TRUE;
 	}
 
-	public function edit($id, $params)
+	public function edit($id, $product_params, $categories, $tags)
 	{
-		$params = $this->type_set_params($params);
+		$params = $this->type_set_params($product_params);
 		$params['id'] = $id;
 		$statement = $this->db->prepare(self::STATEMENT_UPDATE_PRODUCT);
-		return($statement->execute($params));
+		if( !$statement->execute($params) ){ return FALSE; }
+
+		return $this->update_taxonomies($id, $categories, $tags);	
+
 	}
 
 	public function get_product($id, $type_unset = TRUE)
@@ -166,4 +173,50 @@ class Product_model extends Base_model
 		}
 		return $return_array;
 	}
+
+	private function update_taxonomies($id, $categories, $tags)
+	{
+
+		$statement = $this->db->prepare(self::STATEMENT_SELECT_PRODUCT_CATEGORY_IDS);
+		$statement->execute(array('product_id' => $id));
+		$current_categories = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+		if( $current_categories !== array_values($categories) )
+		{
+			$statement = $this->db->prepare(self::STATEMENT_DELETE_PRODUCT_CATEGORIES);
+			$statement->execute(array('product_id' => $id));
+
+			$statement = $this->db->prepare(self::STATEMENT_INSERT_PRODUCT_CATEGORY);
+			foreach ($categories as $category)
+			{
+				if( !$statement->execute(array('product_id' => $id, 'category_id' => $category)) )
+				{
+					return FALSE;
+				}
+			}
+		}
+
+		$statement = $this->db->prepare(self::STATEMENT_SELECT_PRODUCT_TAG_IDS);
+		$statement->execute(array('product_id' => $id));
+		$current_tags = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+		if( $current_tags !== array_values($tags) )
+		{
+			$statement = $this->db->prepare(self::STATEMENT_DELETE_PRODUCT_TAGS);
+			$statement->execute(array('product_id' => $id));
+
+			$statement = $this->db->prepare(self::STATEMENT_INSERT_PRODUCT_TAG);
+			foreach ($tags as $tag)
+			{
+				if( !$statement->execute(array('product_id' => $id, 'tag_id' => $tag)) )
+				{
+					return FALSE;
+				}
+			}
+		}
+
+		return TRUE;
+
+	}
+
 }

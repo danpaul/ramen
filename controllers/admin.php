@@ -77,12 +77,20 @@ class Admin_controller extends Base_controller
 
 	public function post_edit_product($id)
 	{
+
+		$categories = isset($_POST['categories']) ? $_POST['categories'] : array();
+		$tags = isset($_POST['tags']) ? $_POST['tags'] : array();
+
 		require_once $GLOBALS['config']['models']. '/product.php';
 		$product = new Product_model();
-		if($product->edit($id, $_POST)){
+
+		if( $product->edit($id, $_POST['product'], $categories, $tags) )
+		{
 			$_SESSION['flash_message'] = array(self::SUCCESS_RECORD_SAVE);
 			header('Location: '. $GLOBALS['config']['site_root_url']. '/admin/products');
+		
 		}else{
+
 			$_SESSION['flash_message'] = array(self::ERROR_RECORD_SAVE);
 			header('Location: '. $GLOBALS['config']['error_page']);
 		}

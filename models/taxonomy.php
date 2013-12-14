@@ -6,9 +6,11 @@ class Taxonomy_model extends Base_model
 {
 	//CATEGORIES
 	const STATEMENT_INSERT_CATEGORY = 'INSERT INTO Categories(name, category_type, parent) VALUES (:name, :category_type, :parent)';
+	
 	const STATEMENT_SELECT_CATEGORY_BY_NAME = 'SELECT * FROM Categories WHERE name=:name LIMIT 1';
 	const STATEMENT_SELECT_CATEGORY_BY_ID = 'SELECT * FROM Categories WHERE id=:id LIMIT 1';
 	const STATEMENT_SELECT_ALL_CATEGORIES = 'SELECT * FROM Categories WHERE category_type=:category_type';
+		
 	const STATEMENT_UPDATE_CATEGORY_NAME = 'UPDATE Categories SET name=:new_name WHERE id=:id';
 	const STATEMENT_UPDATE_CATEGORY_PARENT = 'UPDATE Categories SET parent=:new_parent WHERE id=:id';
 
