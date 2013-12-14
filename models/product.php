@@ -108,7 +108,7 @@ class Product_model extends Base_model
 
 		foreach ($results as $product_tag)
 		{
-			array_push($tags, $product_tag['id']);
+			array_push($tags, $product_tag['tag_id']);
 		}
 
 		return $tags;
@@ -124,7 +124,7 @@ class Product_model extends Base_model
 
 		foreach ($results as $product_category)
 		{
-			array_push($categories, $product_category['id']);
+			array_push($categories, $product_category['category_id']);
 		}
 
 		return $categories;

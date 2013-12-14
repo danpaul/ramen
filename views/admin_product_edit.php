@@ -7,21 +7,28 @@ require_once($GLOBALS['config']['views']. '/_head.php');
 
 <?php
 
-function display_categories($categories, $top_level = TRUE){
+function display_categories($categories, &$product_categories, $top_level = TRUE){
 
 	echo '<ul>';
 		foreach ($categories as $category_data) {
 			if( ($top_level && $category_data['parent'] ===  NULL) || !$top_level )
 			{
+				$checked = '';
+
+				if( in_array($category_data['id'], $product_categories) )
+				{
+					$checked = 'checked="true"';
+				}
+
 				echo '<li>';
-					echo '<input type="checkbox" name="categories['. $category_data['id']. ']" id="category_'. $category_data['id']. '"  value="'. $category_data['id']. '"/>';
+					echo '<input type="checkbox" name="categories['. $category_data['id']. ']" id="category_'. $category_data['id']. '"  value="'. $category_data['id']. '" '. $checked. '/>';
 					echo '<label for="category_'. $category_data['id']. '">';
 						echo $category_data['name'];
 					echo '</label>';
 
 					if( !empty($category_data['subcategories']) )
 					{
-						display_categories($category_data['subcategories'], FALSE);
+						display_categories($category_data['subcategories'], $product_categories, FALSE);
 					}
 				echo '</li>';
 			}
@@ -37,12 +44,11 @@ function display_categories($categories, $top_level = TRUE){
 	Description: <textarea name="product[description]"><?php echo $_product['description']; ?></textarea><br>
 	Price: <input type="text" name="product[price]" value="<?php echo $_product['price']; ?>"><br>
 	Inventory: <input type="text" name="product[inventory]" value="<?php echo $_product['inventory']; ?>"><br>
-	<!-- <input type="submit" value="submit"><br> -->
 	<br>
 
 	<h2>categories:</h2>
 
-	<?php display_categories($_categories); ?>
+	<?php display_categories($_categories, $_product_categories); ?>
 
 	<h2>tags:</h2>
 
@@ -52,6 +58,7 @@ function display_categories($categories, $top_level = TRUE){
 		<ul>
 			<?php foreach ($members as $tag) {
 				$checked = FALSE;
+
 				if( in_array($tag['id'], $_product_tags) )
 				{
 					$checked = TRUE;
