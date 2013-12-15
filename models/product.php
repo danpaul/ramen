@@ -80,16 +80,11 @@ class Product_model extends Base_model
 		return $this->update_taxonomies($id, $categories, $tags);
 	}
 
-	public function get_product($id, $type_unset = TRUE)
+	public function get_product($id)
 	{
 		$statement = $this->db->prepare(self::STATEMENT_GET_PRODUCT);
 		$statement->execute(array('id' => $id));
 		return $statement->fetch(PDO::FETCH_ASSOC);
-		// if($type_unset){
-		// 	return $this->type_unset_params($statement->fetch(PDO::FETCH_ASSOC));
-		// }else{
-		// 	return $statement->fetch(PDO::FETCH_ASSOC);
-		// }
 	}
 
 	public function get_products_in_category($category_name)
@@ -151,17 +146,12 @@ class Product_model extends Base_model
 
 	}
 
-	public function get_products($type_unset = TRUE)
+	public function get_products()
 	{
 		$statement = $this->db->prepare(self::STATEMENT_GET_PRODUCTS);
 		$statement->execute();
 		$results = $statement->fetchAll(PDO::FETCH_ASSOC);
 		return $results;
-		// if($type_unset){
-		// 	return $this->type_unset_products($results);
-		// }else{
-		// 	return $results;
-		// }
 	}
 
 	public function get_product_tags($product_id)
@@ -203,37 +193,11 @@ class Product_model extends Base_model
 		return $statement->execute(array('id' => $id));
 	}
 
-	// private function type_unset_products($products)
-	// {
-	// 	$return_array = array();
-	// 	foreach ($products as $product)
-	// 	{
-	// 		// array_push($return_array, $this->type_unset_params($product));
-	// 		array_push($return_array, $product);
-	// 	}
-	// 	return $return_array;
-	// }
-
-	private function type_unset_params($params)
-	{
-		$return_array = array();
-		foreach ($params as $key => $value) {
-			if($key === 'price'){
-				// $return_array[$key] = number_format((float)(0.01 * $value), 2);
-				$return_array[$key] = $value;
-			}else{
-				$return_array[$key] = $value;
-			}
-		}
-		return $return_array;
-	}
-
 	private function type_set_params($params)
 	{
 		$return_array = array();
 		foreach ($params as $key => $value) {
 			if($key === 'price'){
-				// $return_array[$key] = (float)($value * 100);
 				$return_array[$key] = (float)($value);
 			}elseif ($key === 'inventory') {
 				$return_array[$key] = (int)$value;
