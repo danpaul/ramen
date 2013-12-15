@@ -346,8 +346,6 @@ class Taxonomy_model extends Base_model
 
 	}
 
-
-
 	// Groups tags by type
 	protected function group_tags($tags)
 	{

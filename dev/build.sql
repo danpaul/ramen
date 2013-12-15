@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS Products
 	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name varchar(255) NOT NULL DEFAULT '',
 	description text NOT NULL DEFAULT '',
-	price int NOT NULL DEFAULT 0,
+	price decimal(10, 2) NOT NULL DEFAULT 0.00,
+	-- price int NOT NULL DEFAULT 0,
 	inventory int NOT NULL DEFAULT 0
 );
 
