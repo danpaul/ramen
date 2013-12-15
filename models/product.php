@@ -23,8 +23,9 @@ class Product_model extends Base_model
 	const STATEMENT_SELECT_PRODUCT_CATEGORY_IDS = 'SELECT category_id FROM ProductCategories WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_TAG_IDS = 'SELECT tag_id FROM ProductTags WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_IDS_BY_TAG_ID = 'SELECT product_id FROM ProductTags WHERE tag_id=:tag_id';
-	const STATEMENT_SELECT_JOIN_TAGS_PART = 'SELECT * FROM ProductTags JOIN Products ON ProductTags.product_id = Products.id WHERE ';
-
+	const STATEMENT_SELECT_JOIN_TAG_PART = 'SELECT * FROM ProductTags JOIN Products ON ProductTags.product_id = Products.id WHERE ';
+	const STATEMENT_SELECT_JOIN_TAGS = 'SELECT * FROM ProductTags JOIN Products ON ProductTags.product_id = Products.id WHERE tag_id IN (???)';
+	
 	const PRODUCT_CATEGORY_TYPE = 'products';
 
 	public function __construct()
@@ -99,9 +100,6 @@ class Product_model extends Base_model
 		return $this->get_products_by_category_ids($categories);
 	}
 
-
-
-
 	public function get_products_in_categories($category_names)
 	{
 		require_once($GLOBALS['config']['models']. '/taxonomy.php');
@@ -129,9 +127,26 @@ class Product_model extends Base_model
 		$taxonomy = new Taxonomy_model();
 		$tag = $taxonomy->get_tag_by_name($type, $tag);
 
-		$statement = $this->db->prepare(self::STATEMENT_SELECT_JOIN_TAGS_PART. 'tag_id=:tag_id');
+		$statement = $this->db->prepare(self::STATEMENT_SELECT_JOIN_TAG_PART. 'tag_id=:tag_id');
 		if( !$statement->execute(array('tag_id' => $tag['id'])) ){ return FALSE; }
 		return $statement->fetchAll(PDO::FETCH_ASSOC);
+
+	}
+
+	public function get_products_by_types($types)
+	{
+		require_once($GLOBALS['config']['models']. '/taxonomy.php');
+		$taxonomy = new Taxonomy_model;
+		$tag_ids = $taxonomy->get_tags_by_names($types);
+		if( !$tag_ids ){ return array(); }
+
+		$statement = str_replace('???',
+								 $this->generate_question_marks(count($tag_ids)),
+								 self::STATEMENT_SELECT_JOIN_TAGS);
+		$statement = $this->db->prepare($statement);
+		$statement->execute($tag_ids);
+		$results = $statement->fetchAll(PDO::FETCH_ASSOC);
+		return $results;
 
 	}
 

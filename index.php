@@ -100,10 +100,10 @@ switch($_SERVER['REQUEST_METHOD'])
 						$tag = get_param($params, 3);
 						$product->get_type($type, $tag);
 						goto end;
-
-					//case 'types'
-
-					//case 'query'
+					case 'types':
+						$product->get_types($_GET);
+						goto end;
+					//case 'query':
 				}
 			}
 		}

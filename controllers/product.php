@@ -36,4 +36,14 @@ class Product_controller extends Base_controller
 		$_products = $this->product->get_products_in_type_by_tag($type, $tag);
 		require_once($GLOBALS['config']['views']. '/products.php');
 	}
+
+	//key should by type value should be tag
+	public function get_types($type_array)
+	{
+		$_products = $this->product->get_products_by_types($type_array);
+
+// echo var_dump($_products);
+// die();
+		require_once($GLOBALS['config']['views']. '/products.php');
+	}
 }

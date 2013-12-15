@@ -53,4 +53,25 @@ class Base_model
 		$statement .= ')';
 		return $statement;
 	}
+
+	/*
+		Generates a number of question for parameter place holder in PDO prepared statement
+	*/
+	protected function generate_question_marks($number)
+	{
+		$questions = '';
+		$first = TRUE;
+
+		for($i = 0; $i < $number; $i++)
+		{
+			if($first)
+			{
+				$first = FALSE;
+				$questions .= '?';
+			}else{
+				$questions .= ', ?';
+			}
+		}
+		return $questions;
+	}
 }

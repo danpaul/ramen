@@ -19,6 +19,7 @@ class Taxonomy_model extends Base_model
 	const STATEMENT_INSERT_TAG = 'INSERT INTO Tags(category, type, name) VALUES (:category, :type, :name)';
 	const STATEMENT_SELECT_ALL_TAGS = 'SELECT * FROM Tags WHERE category=:category';
 	const STATEMENT_SELECT_TAG_BY_NAME = 'SELECT * FROM Tags WHERE type=:type AND name=:name';
+	const STATEMENT_SELECT_TAGS_BY_NAMES = 'SELECT id FROM Tags WHERE type=? AND name IN (???)';
 	const STATEMENT_UPDATE_TAG_NAME = 'UPDATE Tags SET name=:new_name WHERE category=:category AND type=:type AND name=:name';
 	
 	public function __construct()
@@ -315,6 +316,34 @@ class Taxonomy_model extends Base_model
 			return FALSE;
 		}
 		return $statement->fetch(PDO::FETCH_ASSOC);
+	}
+
+	/*
+		Takes an associative array where they type is the key and the value
+			is an array of tag names within that type. Returns an array of tag_ids
+	*/
+	public function get_tags_by_names($types_tags)
+	{		
+		$tag_ids = array();
+
+		foreach($types_tags as $type => $tags)
+		{
+			$statement = str_replace('???',
+									 $this->generate_question_marks(count($tags)),
+									 self::STATEMENT_SELECT_TAGS_BY_NAMES);
+			$statement = $this->db->prepare($statement);
+			array_unshift($tags, $type);
+			$statement->execute($tags);
+			$results = $statement->fetchAll(PDO::FETCH_COLUMN);
+
+			if( $results )
+			{ 
+				$tag_ids = array_merge($tag_ids, $results);
+			}
+		}
+
+		return array_unique($tag_ids);
+
 	}
 
 
