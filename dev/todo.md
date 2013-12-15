@@ -1,5 +1,7 @@
 todo:
 
+make taxonomy model get_categories_by_names more efficient
+
 after adding/upadting cat or tax, redirect to main tax page
 
 implement move category feature

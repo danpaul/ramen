@@ -1,8 +1,11 @@
 <?php
 
+
 require_once 'config.php';
 
 $params = explode_url();
+
+
 
 switch($_SERVER['REQUEST_METHOD'])
 {
@@ -88,11 +91,11 @@ switch($_SERVER['REQUEST_METHOD'])
 					case 'category':
 						$product->get_category(get_param($params, 2));
 						goto end;
+					case 'categories':
+						$categories = isset($_GET['categories']) ? $_GET['categories'] : array();
+						$product->get_categories($categories);
+						goto end;
 				}
-				// require_once($config['controllers']. '/product.php');
-				// $product = new Product_controller();
-				// $product->get_product(get_param($params, 1));
-				// goto end;
 			}
 		}
 	}

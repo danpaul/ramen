@@ -7,7 +7,7 @@ class Taxonomy_model extends Base_model
 	//CATEGORIES
 	const STATEMENT_INSERT_CATEGORY = 'INSERT INTO Categories(name, category_type, parent) VALUES (:name, :category_type, :parent)';
 	
-	const STATEMENT_SELECT_CATEGORY_BY_NAME = 'SELECT * FROM Categories WHERE name=:name LIMIT 1';
+	const STATEMENT_SELECT_CATEGORY_BY_NAME = 'SELECT * FROM Categories WHERE name=:name AND category_type=:category_type LIMIT 1';
 	const STATEMENT_SELECT_CATEGORY_BY_ID = 'SELECT * FROM Categories WHERE id=:id LIMIT 1';
 	const STATEMENT_SELECT_ALL_CATEGORIES = 'SELECT * FROM Categories WHERE category_type=:category_type';
 		
@@ -68,14 +68,32 @@ class Taxonomy_model extends Base_model
 		Takes a category name and returns an array of category `id`s including
 			the parent category.
 	*/
-	public function get_categories_by_name($category_name)
+	public function get_categories_by_name($category_type, $category_name)
 	{
-		$category = $this->fetch_category_by_name($category_name);
+		$category = $this->fetch_category_by_name($category_type, $category_name);
 		if( $category === FALSE ){ return FALSE; }
-		$categories = $this->get_categories($category['category_type']);
+		$categories = $this->get_categories($category_type);
 		$children = $this->find_category_children($categories, $category['id']);
 		array_push($children, $category['id']);
 		return $children;
+	}
+
+	/*
+		Same as `get_categories_by_name` except takes an array of category names
+	*/
+	public function get_categories_by_names($category_type, $category_names)
+	{
+		$categories = array();
+		if( !isset($category_names[0]) ){ return FALSE; }
+
+		foreach ($category_names as $category_name)
+		{
+			$results = $this->get_categories_by_name($category_type, $category_name);
+			if( !is_array($results) ){ $results = array(); }
+			$categories = array_merge($categories, $results);
+		}
+
+		return array_unique($categories);
 	}
 
 	public function get_category_list($category_type)
@@ -127,11 +145,13 @@ class Taxonomy_model extends Base_model
 		return $statement->execute($params);
 	}
 
-	private function fetch_category_by_name($name)
+	/*
+		Takes category type and and name and returns category record
+	*/
+	private function fetch_category_by_name($category_type, $name)
 	{
-		$params = array( 'name' => $name );
 		$statement = $this->db->prepare(self::STATEMENT_SELECT_CATEGORY_BY_NAME);
-		if( $statement->execute($params) )
+		if( $statement->execute(array( 'name' => $name, 'category_type' => $category_type )) )
 		{
 			return $statement->fetch(PDO::FETCH_ASSOC);
 		}

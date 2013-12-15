@@ -23,6 +23,8 @@ class Product_model extends Base_model
 	const STATEMENT_SELECT_PRODUCT_CATEGORY_IDS = 'SELECT category_id FROM ProductCategories WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_TAG_IDS = 'SELECT tag_id FROM ProductTags WHERE product_id=:product_id';
 
+	const PRODUCT_CATEGORY_TYPE = 'products';
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -90,16 +92,38 @@ class Product_model extends Base_model
 	{
 		require_once($GLOBALS['config']['models']. '/taxonomy.php');
 		$taxonomy = new Taxonomy_model;
-		$categories = $taxonomy->get_categories_by_name($category_name);
+		$categories = $taxonomy->get_categories_by_name(self::PRODUCT_CATEGORY_TYPE, $category_name);
+		if( !$categories ){ return array(); }
+		return $this->get_products_by_category_ids($categories);
+	}
 
-		$statement = self::STATEMENT_SELECT_WHERE_PART. $this->or_statement_generate($categories, 'ProductCategories.category_id');
 
+
+
+	public function get_products_in_categories($category_names)
+	{
+		require_once($GLOBALS['config']['models']. '/taxonomy.php');
+		$taxonomy = new Taxonomy_model;		
+		$categories = $taxonomy->get_categories_by_names(self::PRODUCT_CATEGORY_TYPE, $category_names);
+		if( !$categories ){ return array(); }
+		return $this->get_products_by_category_ids($categories);
+	}
+
+	/*
+		Takes an array of category ids and returns an array of product records
+
+	*/
+	private function get_products_by_category_ids($category_ids)
+	{
+
+		$statement = self::STATEMENT_SELECT_WHERE_PART. $this->or_statement_generate($category_ids, 'ProductCategories.category_id');
 		$statement = $this->db->prepare($statement);
-
-		if( !$statement->execute($categories) ){ return FALSE; }
+		if( !$statement->execute($category_ids) ){ return FALSE; }
 		return $statement->fetchAll(PDO::FETCH_ASSOC);
 
 	}
+
+
 
 	public function get_products($type_unset = TRUE)
 	{
