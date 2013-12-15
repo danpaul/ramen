@@ -22,6 +22,8 @@ class Product_model extends Base_model
 	const STATEMENT_SELECT_PRODUCT_CATEGORIES = 'SELECT * FROM ProductCategories WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_CATEGORY_IDS = 'SELECT category_id FROM ProductCategories WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_TAG_IDS = 'SELECT tag_id FROM ProductTags WHERE product_id=:product_id';
+	const STATEMENT_SELECT_PRODUCT_IDS_BY_TAG_ID = 'SELECT product_id FROM ProductTags WHERE tag_id=:tag_id';
+	const STATEMENT_SELECT_JOIN_TAGS_PART = 'SELECT * FROM ProductTags JOIN Products ON ProductTags.product_id = Products.id WHERE ';
 
 	const PRODUCT_CATEGORY_TYPE = 'products';
 
@@ -111,7 +113,6 @@ class Product_model extends Base_model
 
 	/*
 		Takes an array of category ids and returns an array of product records
-
 	*/
 	private function get_products_by_category_ids($category_ids)
 	{
@@ -120,10 +121,19 @@ class Product_model extends Base_model
 		$statement = $this->db->prepare($statement);
 		if( !$statement->execute($category_ids) ){ return FALSE; }
 		return $statement->fetchAll(PDO::FETCH_ASSOC);
-
 	}
 
+	public function get_products_in_type_by_tag($type, $tag)
+	{
+		require_once($GLOBALS['config']['models']. '/taxonomy.php');
+		$taxonomy = new Taxonomy_model();
+		$tag = $taxonomy->get_tag_by_name($type, $tag);
 
+		$statement = $this->db->prepare(self::STATEMENT_SELECT_JOIN_TAGS_PART. 'tag_id=:tag_id');
+		if( !$statement->execute(array('tag_id' => $tag['id'])) ){ return FALSE; }
+		return $statement->fetchAll(PDO::FETCH_ASSOC);
+
+	}
 
 	public function get_products($type_unset = TRUE)
 	{

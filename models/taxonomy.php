@@ -18,6 +18,7 @@ class Taxonomy_model extends Base_model
 	const STATEMENT_DELETE_TAG = 'DELETE FROM Tags WHERE category=:category AND type=:type AND name=:name';	
 	const STATEMENT_INSERT_TAG = 'INSERT INTO Tags(category, type, name) VALUES (:category, :type, :name)';
 	const STATEMENT_SELECT_ALL_TAGS = 'SELECT * FROM Tags WHERE category=:category';
+	const STATEMENT_SELECT_TAG_BY_NAME = 'SELECT * FROM Tags WHERE type=:type AND name=:name';
 	const STATEMENT_UPDATE_TAG_NAME = 'UPDATE Tags SET name=:new_name WHERE category=:category AND type=:type AND name=:name';
 	
 	public function __construct()
@@ -303,6 +304,19 @@ class Taxonomy_model extends Base_model
 		return $statement->execute($params);
 	}
 
+	/*
+		Takes tag type and name and returns the tag's record
+	*/
+	public function get_tag_by_name($type, $tag_name)
+	{
+		$statement = $this->db->prepare(self::STATEMENT_SELECT_TAG_BY_NAME);
+		if( !$statement->execute(array('type' => $type, 'name' => $tag_name)) )
+		{
+			return FALSE;
+		}
+		return $statement->fetch(PDO::FETCH_ASSOC);
+	}
+
 
 
 	// Groups tags by type
@@ -328,4 +342,5 @@ class Taxonomy_model extends Base_model
 		}
 		return strcmp($tag_1['name'], $tag_2['name']);
 	}
+
 }

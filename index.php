@@ -95,6 +95,15 @@ switch($_SERVER['REQUEST_METHOD'])
 						$categories = isset($_GET['categories']) ? $_GET['categories'] : array();
 						$product->get_categories($categories);
 						goto end;
+					case 'type':
+						$type = get_param($params, 2);
+						$tag = get_param($params, 3);
+						$product->get_type($type, $tag);
+						goto end;
+
+					//case 'types'
+
+					//case 'query'
 				}
 			}
 		}
@@ -175,7 +184,7 @@ function get_param($params, $offset)
 {
 	if(isset($params[$offset]))
 	{
-		return $params[$offset];
+		return urldecode($params[$offset]);
 	}else{
 		return '';
 	}

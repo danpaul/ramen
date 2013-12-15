@@ -16,13 +16,13 @@ class Product_controller extends Base_controller
 	public function get_category($category_name)
 	{
 		$_products = $this->product->get_products_in_category($category_name);
-		require_once($GLOBALS['config']['views']. '/product_category.php');
+		require_once($GLOBALS['config']['views']. '/products.php');
 	}
 
 	public function get_categories($categories)
 	{
 		$_products = $this->product->get_products_in_categories($categories);
-		require_once($GLOBALS['config']['views']. '/product_category.php');
+		require_once($GLOBALS['config']['views']. '/products.php');
 	}
 
 	public function get_product($id)
@@ -31,4 +31,9 @@ class Product_controller extends Base_controller
 		require_once($GLOBALS['config']['views']. '/product.php');
 	}
 
+	public function get_type($type, $tag)
+	{
+		$_products = $this->product->get_products_in_type_by_tag($type, $tag);
+		require_once($GLOBALS['config']['views']. '/products.php');
+	}
 }
