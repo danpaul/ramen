@@ -56,13 +56,26 @@ class Taxonomy_model extends Base_model
 	public function get_categories($category_type)
 	{
 		$params = array('category_type' => $category_type);
-
 		$statement = $this->db->prepare(self::STATEMENT_SELECT_ALL_CATEGORIES);
 		if(! ($statement->execute($params)) ){ return FALSE; }
 		$categories = $statement->fetchAll();
 		usort($categories, 'Taxonomy_model::category_list_sort');
 		$this->build_category_tree($categories);
 		return($categories);
+	}
+
+	/*
+		Takes a category name and returns an array of category `id`s including
+			the parent category.
+	*/
+	public function get_categories_by_name($category_name)
+	{
+		$category = $this->fetch_category_by_name($category_name);
+		if( $category === FALSE ){ return FALSE; }
+		$categories = $this->get_categories($category['category_type']);
+		$children = $this->find_category_children($categories, $category['id']);
+		array_push($children, $category['id']);
+		return $children;
 	}
 
 	public function get_category_list($category_type)

@@ -72,6 +72,28 @@ switch($_SERVER['REQUEST_METHOD'])
 						$user->verify(get_param($params, 2));
 						goto end;
 				}
+			case 'product':
+			{
+				require_once($config['controllers']. '/product.php');
+				$product = new Product_controller();
+				$product->get_product(get_param($params, 1));
+				goto end;
+			}
+			case 'products':
+			{
+				require_once($config['controllers']. '/product.php');
+				$product = new Product_controller();
+				switch(get_param($params, 1))
+				{
+					case 'category':
+						$product->get_category(get_param($params, 2));
+						goto end;
+				}
+				// require_once($config['controllers']. '/product.php');
+				// $product = new Product_controller();
+				// $product->get_product(get_param($params, 1));
+				// goto end;
+			}
 		}
 	}
 

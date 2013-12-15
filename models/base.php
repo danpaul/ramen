@@ -31,4 +31,26 @@ class Base_model
 			$this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_SILENT);
 		}		
 	}
+
+	/*
+		Takes an array and param name and constructs part of a prepared statemnt
+
+	*/
+	protected function or_statement_generate($params, $param_name)
+	{
+		$statement = '(';
+		$first = TRUE;
+		foreach ($params as $param)
+		{
+			if($first)
+			{
+				$first = FALSE;
+				$statement .= $param_name. '=? ';
+			}else{
+				$statement .= 'OR '. $param_name. '=? ';
+			}
+		}
+		$statement .= ')';
+		return $statement;
+	}
 }

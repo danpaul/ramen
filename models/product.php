@@ -6,6 +6,7 @@ class Product_model extends Base_model
 {
 	const STATEMENT_GET_PRODUCT = 'SELECT * FROM Products WHERE id=:id LIMIT 1';
 	const STATEMENT_GET_PRODUCTS = 'SELECT * FROM Products';
+	// const STATEMENT_PART_SELECT_WHERE = 'SELECT * FROM ProductCategories WHERE ';
 
 	const STATEMENT_DELETE_PRODUCT = 'DELETE FROM Products WHERE id=:id';
 	const STATEMENT_DELETE_PRODUCT_CATEGORIES = 'DELETE FROM ProductCategories WHERE product_id=:product_id';
@@ -71,8 +72,7 @@ class Product_model extends Base_model
 		$statement = $this->db->prepare(self::STATEMENT_UPDATE_PRODUCT);
 		if( !$statement->execute($params) ){ return FALSE; }
 
-		return $this->update_taxonomies($id, $categories, $tags);	
-
+		return $this->update_taxonomies($id, $categories, $tags);
 	}
 
 	public function get_product($id, $type_unset = TRUE)
@@ -84,6 +84,43 @@ class Product_model extends Base_model
 		}else{
 			return $statement->fetch(PDO::FETCH_ASSOC);
 		}
+	}
+
+	public function get_products_in_category($category_name)
+	{
+		require_once($GLOBALS['config']['models']. '/taxonomy.php');
+		$taxonomy = new Taxonomy_model;
+		$categories = $taxonomy->get_categories_by_name($category_name);
+		$statement = 'SELECT * FROM ProductCategories WHERE '. 
+			$this->or_statement_generate($categories, 'category_id').
+			' JOIN Products ON ProductCategories.product_id = Products.id';
+
+$statement = 'SELECT * FROM ProductCategories '.
+	'JOIN Products '.
+	'ON ProductCategories.product_id = Products.id '.
+	'WHERE '. $this->or_statement_generate($categories, 'ProductCategories.category_id');
+
+	// (ProductCategories.category_id=1 OR ProductCategories.category_id=2 OR ProductCategories.category_id=3 ) ';
+
+
+// $statement = 'SELECT * FROM '
+// echo $statement;
+// die();
+		$statement = $this->db->prepare($statement);
+
+
+
+		if( !$statement->execute($categories) ){ return FALSE; }
+		$products = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+		echo var_dump($products);
+
+// echo var_dump($categories);
+die();
+		//get category ID
+		//find child categories
+		//find products are in those categories
+
 	}
 
 	public function get_products($type_unset = TRUE)
