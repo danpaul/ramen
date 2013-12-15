@@ -16,7 +16,8 @@ class Product_controller extends Base_controller
 	public function get_category($category_name)
 	{
 		$_products = $this->product->get_products_in_category($category_name);
-echo var_dump($_products);
+		require_once($GLOBALS['config']['views']. '/product_category.php');
+// echo var_dump($_products);
 	}
 
 	public function get_product($id)
