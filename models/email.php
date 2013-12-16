@@ -1,5 +1,7 @@
 <?php
 
+echo 'foo';
+
 class Email
 {
 	private $to_email;

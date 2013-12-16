@@ -14,4 +14,9 @@ class Base_controller
 			$GLOBALS['FLASH_MESSAGE'] = NULL;
 		}
 	}
+
+	public function get_menu_data()
+	{
+		return 'foo';
+	}
 }
