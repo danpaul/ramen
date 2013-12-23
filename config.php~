@@ -6,7 +6,7 @@ $config = array();
 
 //set to `FALSE` for production
 
-$config['environment'] = 'imac';
+$config['environment'] = 'samsung';
 
 /* 
 	Environment
@@ -39,6 +39,18 @@ switch($config['environment'])
 
 		$config['url_parse_offest'] = 2;
 		break;
+		
+	case('samsung'):
+		$config['db']['host'] = 'localhost';
+		$config['db']['name'] = 'ramen';
+		$config['db']['user'] = 'root';
+		$config['db']['password'] = 'root';
+		$config['site_root_url'] = 'http://localhost/ramen';
+
+		$config['debug'] = TRUE;
+
+		$config['url_parse_offest'] = 2;
+		break;	
 }
 
 if($config['debug']){
