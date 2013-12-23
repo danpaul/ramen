@@ -22,7 +22,9 @@ switch($_SERVER['REQUEST_METHOD'])
 		{
 
 			case '':
-				echo 'index';
+				require_once($config['controllers']. '/home.php');
+				$home = new Home_controller();
+				$home->get_home();
 				goto end;
 
 			case 'admin':

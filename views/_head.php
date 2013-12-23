@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="<?php echo $GLOBALS['config']['assets_root_url']; ?>/css/normalize.css">
   <link rel="stylesheet" href="<?php echo $GLOBALS['config']['assets_root_url']; ?>/css/foundation.css">
   <link rel="stylesheet" href="<?php echo $GLOBALS['config']['assets_root_url']; ?>/css/style.css">
-
+  
   <script src="<?php echo $GLOBALS['config']['assets_root_url']; ?>/js/vendor/custom.modernizr.js"></script>
 
 </head>
