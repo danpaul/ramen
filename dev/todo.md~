@@ -1,7 +1,5 @@
 todo:
 
-create table for admin config details (i.e. site name, email copy?)
-
 make taxonomy model get_categories_by_names more efficient
 
 after adding/upadting cat or tax, redirect to main tax page

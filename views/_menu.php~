@@ -19,7 +19,7 @@
 			</li>
 
 		<ul class="right">
-			<li class="active"><a href="<?php echo $GLOBALS['config']['site_root_url']. '/user/login'; ?>">Login/signup</a></li>
+			<li class="active"><a href="<?php echo &GLOBALS['config']['site_root_url']. '/user/login'; ?>">Login/signup</a></li>
 			<li class="has-dropdown"> <a href="#">Right Button with Dropdown</a>
 				<ul class="dropdown">
 					<li><a href="#">First link in dropdown</a></li>

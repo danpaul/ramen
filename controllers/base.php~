@@ -29,7 +29,13 @@ class Base_controller
 		if( !$GLOBALS['ramen']['template_called'] )
 		{
 			$GLOBALS['ramen']['template_callback'] = __FILE__; 
-			require_once($GLOBALS['config']['views']. '/__main.php');			
-		}
+			require_once($GLOBALS['config']['views']. '/__main.php');
+}
+
+echo __FILE__;
+die();
+
 	}
+
+
 }
