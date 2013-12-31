@@ -6,37 +6,44 @@ if( !$GLOBALS['ramen']['template_called'] )
 }
 
 
-
-if($GLOBALS['FLASH_MESSAGE'])
-{
-	foreach ($GLOBALS['FLASH_MESSAGE'] as $message) {
-		echo '<p>'. $message. '</p>';
-	}
-}
-
 ?>
+
+
+<!--  <div class="small-4 centered"><small class="error">test</small></div> -->
+
+<!-- <class small="error">test2</small> -->
 
 <div class="small-12 medium-8 large-6 small-centered columns">
 
-	<!-- <h1>log in</h1> -->
-	<!-- <form action="<?php echo $config['login_page']; ?>" method="post"> -->
+	<?php
+	
+		if($GLOBALS['FLASH_MESSAGE'])
+		{
+			foreach ($GLOBALS['FLASH_MESSAGE'] as $message) {
+				echo '<p>'. $message. '</p>';
+			}
+		}
+	
+	?>
+
 	<form action="<?php echo $GLOBALS['config']['login_page']; ?>" method="post">
 		<fieldset>
-		<legend>Login</legend>
+			<legend>Login</legend>
 			<label>Email</label>
 			<input type="text" name="email">
+			<!-- <small class="error">test<br><br>test 2</small> -->
 			<label>Password</label>
 			<input type="password" name="password">
 			<input class="button small radius" type="submit" value="Login">
 		</fieldset>
 	</form>
-	
+
 	<form action="<?php echo $GLOBALS['config']['register_page']; ?>" method="post">
 		<fieldset>
 			<legend>Register</legend>
 			<label>Email</label>
 			<input type="text" name="email">
-			<label>Password</labe>
+			<label>Password</label>
 			<input type="password" name="password_1">
 			<label>Re-enter password</label>
 			<input type="password" name="password_2">

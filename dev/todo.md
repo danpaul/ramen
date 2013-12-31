@@ -1,5 +1,13 @@
 todo:
 
+error message display on login/registration pages
+
+change menu base on whether user is logged in
+
+after registration, post success message
+
+after login direct back to page the user was on previously
+
 create table for admin config details (i.e. site name, email copy?)
 
 make taxonomy model get_categories_by_names more efficient
