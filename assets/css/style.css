@@ -1,4 +1,7 @@
 
+li.error_message{
+	color: red;
+}
 
 .inline{
 	display:inline

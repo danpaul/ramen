@@ -1,5 +1,0 @@
-RewriteEngine on
-
-# RewriteCond %{REQUEST_URI} !^/ramen/assets(/.*|)$ [NC]
-
-# RewriteRule . index.php [L]

@@ -1,9 +1,0 @@
-<?php
-
-if( !$GLOBALS['ramen']['template_called'] )
-{
-	self::include_template('__main.php', __FILE__);
-}
-?>
-
-<p>home home on the rage</p>

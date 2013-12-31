@@ -6,7 +6,7 @@ $config = array();
 
 //set to `FALSE` for production
 
-$config['environment'] = 'samsung';
+$config['environment'] = 'imac';
 
 /* 
 	Environment

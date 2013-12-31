@@ -1,5 +1,7 @@
 todo:
 
+do not reset password until user clicks confirmation link in email.
+
 error message display on login/registration pages
 
 change menu base on whether user is logged in
