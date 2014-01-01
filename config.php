@@ -81,9 +81,13 @@ $config['content'] = $config['site_root_path']. '/content';
 
 //URLS
 $config['assets_root_url'] = $config['site_root_url']. '/assets';
-$config['login_page'] = $config['site_root_url']. '/user/login';
-$config['reset_password_page'] = $config['site_root_url']. '/user/reset-password';
-$config['register_page'] = $config['site_root_url']. '/user/register';
+
+
+// $config['login_page'] = $config['site_root_url']. '/user/login';
+// $config['reset_password_page'] = $config['site_root_url']. '/user/reset-password';
+// $config['register_page'] = $config['site_root_url']. '/user/register';
+
+
 $config['update_password_page'] = $config['site_root_url']. '/user/update-password';
 $config['verify_page'] = $config['site_root_url']. '/user/verify';
 

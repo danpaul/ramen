@@ -15,25 +15,29 @@ class User_controller extends Base_controller
 		parent::__construct();
 	}
 
-	public function get_login()
+	public function get_login($action)
 	{
+		View::$data['action'] = $action;
 		require_once($GLOBALS['config']['views']. '/user_login.php');
 	}
 
 	public function get_update_password($secret)
 	{
-		require_once $GLOBALS['config']['views']. '/user_update_password.php';
+		View::$data['secret'] = $secret;
+		View::$data['action'] = 'update_password';
+		require_once $GLOBALS['config']['views']. '/user_login.php';
 	}
 
-	public function post_login()
+	public function post_login($action)
 	{
+		View::$data['action'] = $action;
 		if($this->user->login($_POST['email'], $_POST['password']))
 		{
 			echo 'logged in';
 		}else{
 			//set the error messages and redirect
 			$_SESSION['flash_message'] = $this->user->get_error_messages();
-			header('Location: '. $GLOBALS['config']['login_page']);
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/user/login');
 		}
 	}
 
@@ -42,7 +46,7 @@ class User_controller extends Base_controller
 		if(!$this->user->verify_user_exists($_POST['email']))
 		{
 			$_SESSION['flash_message'] = array(self::ERROR_USER_DOES_NOT_EXIST);
-			header('Location: '. $GLOBALS['config']['reset_password_page']);
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/user/reset-password');
 		}else{
 			require_once $GLOBALS['config']['models']. '/email.php';
 
@@ -72,12 +76,14 @@ class User_controller extends Base_controller
 		if($this->user->register($_POST['email'], $_POST['password_1'], $_POST['password_2']))
 		{
 			require_once $GLOBALS['config']['models']. '/email.php';
+			require_once $GLOBALS['config']['content']. '/messages.php';
 			$email = new Email($_POST['email']);
 			$email->send_verification($this->user->verification_code);
-			echo 'succesful registration';
+			$_SESSION['flash_message'] = $content_messages_successful_registration;
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/user/login');			
 		}else{
 			$_SESSION['flash_message'] = $this->user->get_error_messages();
-			header('Location: '. $GLOBALS['config']['login_page']);
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/user/register');
 		}
 	}
 

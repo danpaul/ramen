@@ -65,10 +65,16 @@ switch($_SERVER['REQUEST_METHOD'])
 						user_account();
 						goto end;
 					case 'login':
-						$user->get_login();
+						$user->get_login('login');
+						goto end;
+					case 'register':
+						$user->get_login('register');
+						goto end;
+					case 'login-register':
+						$user->get_login('login_register');
 						goto end;
 					case 'reset-password':
-						$user->get_login();
+						$user->get_login('reset_password');
 						goto end;
 					case 'update-password':
 						$user->get_update_password(get_param($params, 2));
@@ -164,13 +170,13 @@ switch($_SERVER['REQUEST_METHOD'])
 				switch(get_param($params, 1))
 				{
 					case 'login':
-						$user->post_login();
+						$user->post_login('login');
 						goto end;
 					case 'register':
-						$user->register();
+						$user->register('register');
 						goto end;
 					case 'reset-password':
-						$user->post_reset_password();
+						$user->post_reset_password('reset_password');
 						goto end;
 					case 'update-password':
 						$user->post_update_password();

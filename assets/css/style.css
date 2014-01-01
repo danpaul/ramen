@@ -1,7 +1,11 @@
 
-li.error_message{
-	color: red;
+#login-wrap{
+	margin-top: 2em;
 }
+
+/*li.error_message{
+	color: red;
+}*/
 
 .inline{
 	display:inline

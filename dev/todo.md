@@ -1,5 +1,19 @@
 todo:
 
+add logout to menu/detect if user is logged in
+
+fix view in update password
+
+errors in update password
+
+confirm password isn't reset until email link is clicked
+
+add front end validation
+
+add https for secure pages (login etc.)
+
+require min css an js
+
 do not reset password until user clicks confirmation link in email.
 
 error message display on login/registration pages
