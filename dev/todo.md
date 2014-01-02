@@ -1,5 +1,15 @@
 todo:
 
+fix password hash, collision on first n char. match
+
+don't allow login if logged in (update menu)
+
+clear password reset after resetting
+
+update error view
+
+add expiration to password reset
+
 add logout to menu/detect if user is logged in
 
 fix view in update password

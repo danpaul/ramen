@@ -8,9 +8,11 @@
 
 ?>
 
-<div class="small-12 medium-8 large-6 small-centered columns" id="login-wrap">
+<div class="small-12 medium-8 large-6 small-centered columns" id="small-page-wrap">
 
-	<?php require_once($GLOBALS['config']['views']. '/_flash_alerts.php'); ?>
+	<?php require_once($GLOBALS['config']['views']. '/_alerts.php'); ?>
+
+<!-- LOGIN -->
 
 	<?php if( View::$data['action'] === 'login' || View::$data['action'] === 'login_register') { ?>
 
@@ -27,6 +29,8 @@
 			</fieldset>
 		</form>
 
+<!-- REGISTER -->
+
 	<?php } if( View::$data['action'] === 'register' || View::$data['action'] === 'login_register') { ?>
 
 		<form action="<?php echo $GLOBALS['config']['site_root_url'].'/user/register'; ?>" method="post">
@@ -42,6 +46,8 @@
 			</fieldset>
 		</form>
 
+<!-- RESET PASSWORD -->
+
 	<?php } if( View::$data['action'] === 'reset_password') { ?>
 	
 		<form action="<?php echo $GLOBALS['config']['site_root_url']. '/user/reset-password'; ?>" method="post">
@@ -52,6 +58,8 @@
 				<input class="button small radius" type="submit" value="Submit">
 			</fieldset>
 		</form>
+
+<!-- UPDATE PASSWORD -->
 
 	<?php } if( View::$data['action'] === 'update_password') { ?>
 

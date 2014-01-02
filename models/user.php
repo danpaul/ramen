@@ -14,12 +14,15 @@ class User_model extends Base_model
 
 	const STATEMENT_GET_USER = 'SELECT * FROM Users WHERE email=:email LIMIT 1';
 	const STATEMENT_GET_VALIDATION = 'SELECT * FROM EmailVerifications WHERE code=:code LIMIT 1';
+	const STATEMENT_GET_PASSWORD_RESET = 'SELECT * FROM PasswordResets WHERE secret=:secret LIMIT 1';
 	const STATEMENT_INSERT_PASSWORD_RESET = 'INSERT INTO PasswordResets(time, secret, email) VALUES (:time, :secret, :email)';
 	const STATEMENT_INSERT_USER = 'INSERT INTO Users(email, password, salt) VALUES (:email, :password, :salt)';
 	const STATEMENT_INSERT_VERIFICATION = 'INSERT INTO EmailVerifications(code, email) VALUES (:code, :email)';
-	const STATEMENT_UPDATE_USER = 'UPDATE * Users SET WHERE id=:id LIMIT 1';
+	// const STATEMENT_UPDATE_USER = 'UPDATE * Users SET WHERE id=:id LIMIT 1';
 
-	const PASSWORD_MINIMUM_LENGTH = 8;
+
+const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:password WHERE email=:email LIMIT 1';
+
 
 	const ERROR_DATABASE = 'A database error occured';
 	const ERROR_INVALID_EMAIL = 'The email address is not valid.';
@@ -29,14 +32,18 @@ class User_model extends Base_model
 	const ERROR_PASSWORD_MISMATCH = 'Passwords need to match.';
 	const ERROR_PASSWORD_TOO_SHORT = 'Password must be at least 8 characters.';
 	const ERROR_PASSWORD_TOO_LONG = 'Password can not be more than 255 characters.';
+	const ERROR_PASSWORD_RESET_INVALID = 'Your password reset code is not valid. It may have expired. Please request a new code.';
 	const ERROR_USER_DOESNT_EXIST = 'This user no longer exists.';
 	const ERROR_USER_EXISTS = 'A user with this email already exists.';
+
+	const PASSWORD_MINIMUM_LENGTH = 8;
+	const PASSWORD_RESET_TIME_LIMIT = 7200; //2 hours
 
 	public function __construct()
 	{
 		$this->logged_in = FALSE;
 		$this->user = NULL;
-		$this->error_message = [];
+		$this->error_message = array();
 		$this->verification_code = NULL;
 
 		parent::__construct();
@@ -44,7 +51,11 @@ class User_model extends Base_model
 
 	public function login($email, $password)
 	{
-		if(!$this->set_user($email))
+
+// echo $password;
+// die();
+
+		if( !$this->set_user($email) )
 		{
 			array_push($this->error_message, self::ERROR_LOGIN);
 			return FALSE;
@@ -52,7 +63,12 @@ class User_model extends Base_model
 
 		$password = $this->hash_password($password, $this->user['salt']);
 
-		if($password == $this->user['password']){
+// echo $password;
+// echo '<br>';
+// echo $this->user['password'];
+// die();
+
+		if( $password === $this->user['password'] ){
 			$this->logged_in = TRUE;
 			return TRUE;
 		}else{
@@ -64,7 +80,7 @@ class User_model extends Base_model
 	public function register($email, $password_1, $password_2)
 	{
 
-		if(!$this->validate_registration_information($email, $password_1, $password_2))
+		if( !$this->validate_registration_information($email, $password_1, $password_2) )
 		{
 			return FALSE;
 		}
@@ -122,9 +138,45 @@ class User_model extends Base_model
 		return FALSE;
 	}
 
-	public function update_password($secret, $password_1, $password_2)
+	public function update_password($password_1, $password_2, $secret)
 	{
-		
+		//check secret and ensure it hasn't expired
+		$statement = $this->db->prepare(self::STATEMENT_GET_PASSWORD_RESET);
+		if( !$statement->execute(array('secret' => $secret)) )
+		{
+			array_push($this->error_message, self::ERROR_DATABASE);
+			return FALSE;
+		}
+
+		$password_reset = $statement->fetch();
+
+ 		if( $password_reset === FALSE || ((time() - $password_reset['time']) > self::PASSWORD_RESET_TIME_LIMIT) )
+ 		{
+ 			array_push($this->error_message, self::ERROR_PASSWORD_RESET_INVALID);
+ 			return FALSE;
+ 		}
+
+ 		if( !$this->validate_password($password_1, $password_2) )
+ 		{
+ 			return FALSE;
+ 		}
+
+ 		$salt = $this->get_salt();
+
+ 		$params = array(
+ 			'email' => $password_reset['email'],
+ 			'salt' => $salt,
+ 			'password' => $this->hash_password($password_1, $salt)
+ 		);
+
+ 		$statement = $this->db->prepare(self::STATEMENT_UPDATE_USER_PASSWORD);
+
+ 		if( !$statement->execute($params) )
+ 		{
+			array_push($this->error_message, self::ERROR_DATABASE);
+			return FALSE;	
+ 		}
+ 		return TRUE;
 	}
 
 	public function verify($code)
@@ -175,7 +227,9 @@ class User_model extends Base_model
 
 	private function hash_password($password, $salt)
 	{
-		return hash('md5', crypt($password, $salt));
+		// return hash('md5', crypt($password, $salt));
+		// return md5(crypt($password, $salt));
+		return md5(crypt($password, $salt));
 	}
 
 	private function set_user($email)
@@ -199,38 +253,43 @@ class User_model extends Base_model
 	{
 		$valid = TRUE;
 
-		if($this->get_user($email))
+		if( $this->get_user($email) )
 		{
 			$valid = FALSE;
 			array_push($this->error_message, self::ERROR_USER_EXISTS);
 		}
 
-		if(!filter_var($email, FILTER_VALIDATE_EMAIL ))
+		if( !filter_var($email, FILTER_VALIDATE_EMAIL ))
 		{
 			$valid = FALSE;
 			array_push($this->error_message, self::ERROR_INVALID_EMAIL);
 		}
 
-		if($password_1 != $password_2)
+		if( !$this->validate_password($password_1, $password_2) )
+		{
+			$valid = FALSE;
+		}
+
+		return $valid;
+	}
+
+	private function validate_password($password_1, $password_2)
+	{
+		$valid = TRUE;
+
+		if( $password_1 != $password_2 )
 		{
 			$valid = FALSE;
 			array_push($this->error_message, self::ERROR_PASSWORD_MISMATCH);
 		}
 
-		if(strlen($password_1) < self::PASSWORD_MINIMUM_LENGTH)
+		if( strlen($password_1) < self::PASSWORD_MINIMUM_LENGTH )
 		{
 			$valid = FALSE;
 			array_push($this->error_message, self::ERROR_PASSWORD_TOO_SHORT);
 		}
-/*
-		if(ctype_alnum($password_1))
-		{
-			$valid = FALSE;
-			array_push($this->error_message, self::ERROR_PASSWORD_NO_SPECIAL_CHARACTER);
-		}
-*/
+
 		return $valid;
+
 	}
-
-
 }

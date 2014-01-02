@@ -1,9 +1,12 @@
-<?php	
-	if( $GLOBALS['FLASH_MESSAGE'] )
+<?php
+
+	$messages = isset(View::$data['messages']) ? View::$data['messages'] : $GLOBALS['FLASH_MESSAGE'];
+
+	if( $messages )
 	{
-		if( is_array($GLOBALS['FLASH_MESSAGE']))
+		if( is_array($messages) )
 		{
-			foreach ($GLOBALS['FLASH_MESSAGE'] as $message)
+			foreach ($messages as $message)
 			{
 				echo '<div data-alert class="alert-box">';
 					echo $message;
@@ -12,10 +15,10 @@
 			}			
 		}else{
 			echo '<div data-alert class="alert-box">';
-				echo $GLOBALS['FLASH_MESSAGE'];
+				echo $messages;
 				echo '<a href="#" class="close">&times;</a>';
 			echo '</div>';
 		}
+	}
 
-	}	
 ?>

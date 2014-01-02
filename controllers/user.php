@@ -7,6 +7,9 @@ class User_controller extends Base_controller
 	private $user;
 
 	const ERROR_USER_DOES_NOT_EXIST = 'A user with this email does not exists.';
+	
+	const MESSAGE_PASSWORD_RESET_SENT = 'A password reset has been sent. Please check your email and update soon. The password reset is valid for the next two hours only.';
+	const MESSAGE_PASSWORD_UPDATED = 'Your password has been updated.';
 
 	public function __construct()
 	{
@@ -58,7 +61,8 @@ class User_controller extends Base_controller
 				$email = new Email($_POST['email']);
 				if($email->send_password_reset($url))
 				{
-					require_once $GLOBALS['config']['views']. '/user_password_reset_sent.php';
+					View::$data['messages'] = array(self::MESSAGE_PASSWORD_RESET_SENT);
+					require_once $GLOBALS['config']['views']. '/alert.php';
 					return;
 				}
 			}
@@ -66,9 +70,21 @@ class User_controller extends Base_controller
 		}
 	}
 
-	public function post_update_password($secret)
+	public function post_update_password()
 	{
-		
+		$result = $this->user->update_password($_POST['password_1'],
+											   $_POST['password_2'],
+											   $_POST['secret']);
+
+		if( $result === FALSE)
+		{
+			View::$data['messages'] = $this->user->get_error_messages();
+			require_once $GLOBALS['config']['views']. '/alert.php';
+		}else{
+			$_SESSION['flash_message'] = self::MESSAGE_PASSWORD_UPDATED;
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/user/login');
+		}
+
 	}
 
 	public function register()
