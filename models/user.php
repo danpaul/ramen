@@ -51,9 +51,7 @@ const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:p
 
 	public function login($email, $password)
 	{
-
-// echo $password;
-// die();
+		require_once($GLOBALS['config']['lib']. '/password.php');
 
 		if( !$this->set_user($email) )
 		{
@@ -61,20 +59,15 @@ const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:p
 			return FALSE;
 		}
 
-		$password = $this->hash_password($password, $this->user['salt']);
-
-// echo $password;
-// echo '<br>';
-// echo $this->user['password'];
-// die();
-
-		if( $password === $this->user['password'] ){
+		if( password_verify($password. $this->user['salt'], $this->user['password']) )
+		{
 			$this->logged_in = TRUE;
 			return TRUE;
 		}else{
 			array_push($this->error_message, self::ERROR_LOGIN);
 			return FALSE;
 		}
+
 	}
 
 	public function register($email, $password_1, $password_2)
@@ -176,6 +169,7 @@ const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:p
 			array_push($this->error_message, self::ERROR_DATABASE);
 			return FALSE;	
  		}
+
  		return TRUE;
 	}
 
@@ -227,9 +221,11 @@ const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:p
 
 	private function hash_password($password, $salt)
 	{
+		require_once($GLOBALS['config']['lib']. '/password.php');
+		return password_hash($password. $salt, PASSWORD_BCRYPT);
 		// return hash('md5', crypt($password, $salt));
 		// return md5(crypt($password, $salt));
-		return md5(crypt($password, $salt));
+		// return md5(crypt($password, $salt));
 	}
 
 	private function set_user($email)

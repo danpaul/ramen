@@ -78,6 +78,7 @@ $config['controllers'] = $config['site_root_path']. '/controllers';
 $config['models'] = $config['site_root_path']. '/models';
 $config['views'] = $config['site_root_path']. '/views';
 $config['content'] = $config['site_root_path']. '/content';
+$config['lib'] = $config['site_root_path']. '/lib';
 
 //URLS
 $config['assets_root_url'] = $config['site_root_url']. '/assets';
