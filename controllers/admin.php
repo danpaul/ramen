@@ -12,10 +12,9 @@ class Admin_controller extends Base_controller
 
 	public function __construct()
 	{
-//check credentials
-		require_once($GLOBALS['config']['models']. '/admin.php');
-		// $this->admin = new Admin_model();
+		//confirm user is admin
 		parent::__construct();
+		$this->admin_check();
 	}
 
 /*******************************************************************************

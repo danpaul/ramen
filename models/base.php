@@ -74,4 +74,5 @@ class Base_model
 		}
 		return $questions;
 	}
+
 }

@@ -67,6 +67,9 @@ switch($_SERVER['REQUEST_METHOD'])
 					case 'login':
 						$user->get_login('login');
 						goto end;
+					case 'logout':
+						$user->get_logout();
+						goto end;
 					case 'register':
 						$user->get_login('register');
 						goto end;

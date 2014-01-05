@@ -1,8 +1,18 @@
 todo:
 
-fix password hash, collision on first n char. match
 
-don't allow login if logged in (update menu)
+add admin login
+
+add image upload to product
+
+add shopping cart to session
+
+add image upload to products
+
+remove admin model if it's not being used
+
+when user logs in add cart items to user
+
 
 clear password reset after resetting
 
@@ -43,7 +53,6 @@ after adding/upadting cat or tax, redirect to main tax page
 implement move category feature
 
 have tag delete/rename just pass id instead of type
-
 
 
 create login for admin
@@ -99,6 +108,8 @@ use db class in add product
 document db handler
 
 
-xxxxxx done xxxxxx
+***LATER***
 
-redirect after editing or creating product to product main
+convert view variables into View::$data variables
+
+

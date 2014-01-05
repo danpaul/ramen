@@ -10,6 +10,7 @@ class User_controller extends Base_controller
 	
 	const MESSAGE_PASSWORD_RESET_SENT = 'A password reset has been sent. Please check your email and update soon. The password reset is valid for the next two hours only.';
 	const MESSAGE_PASSWORD_UPDATED = 'Your password has been updated.';
+	const MESSAGE_ALREADY_LOGGED_IN = 'You are already logged in.';
 
 	public function __construct()
 	{
@@ -20,8 +21,20 @@ class User_controller extends Base_controller
 
 	public function get_login($action)
 	{
+		if( $this->user_is_logged_in() )
+		{
+			View::$data['messages'] = self::MESSAGE_ALREADY_LOGGED_IN;
+			require_once($GLOBALS['config']['views']. '/alert.php');
+			return;
+		}
 		View::$data['action'] = $action;
 		require_once($GLOBALS['config']['views']. '/user_login.php');
+	}
+
+	public function get_logout()
+	{
+		$this->user->logout();
+		header('Location: '. $GLOBALS['config']['site_root_url']);
 	}
 
 	public function get_update_password($secret)
@@ -36,7 +49,7 @@ class User_controller extends Base_controller
 		View::$data['action'] = $action;
 		if($this->user->login($_POST['email'], $_POST['password']))
 		{
-			echo 'logged in';
+			header('Location: '. $GLOBALS['config']['site_root_url']);
 		}else{
 			//set the error messages and redirect
 			$_SESSION['flash_message'] = $this->user->get_error_messages();

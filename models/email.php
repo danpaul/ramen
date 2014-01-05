@@ -37,6 +37,6 @@ class Email
 
 	private function make_verification_link($verification_code)
 	{
-		return $GLOBALS['config']['verify_page']. "/$verification_code";
+		return $GLOBALS['config']['site_root_url']. "/user/verify/$verification_code";
 	}
 }

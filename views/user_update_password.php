@@ -13,7 +13,7 @@ if($GLOBALS['FLASH_MESSAGE'])
 
 <h1>update password</h1>
 
-<form action="<?php echo $GLOBALS['config']['update_password_page']; ?>" method="post">
+<form action="<?php echo $GLOBALS['config']['site_root_url'] .'/user/update-password'; ?>" method="post">
 	New password: <input type="password" name="password_1"><br>
 	Retype new password: <input type="password" name="password_2"><br>
 	<input type="hidden" name="secret" value="<?php echo $secret; ?>">

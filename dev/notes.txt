@@ -1,0 +1,1 @@
+Admin must be set via php myadmin, set user role to 1

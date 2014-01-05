@@ -6,23 +6,21 @@ require_once($GLOBALS['config']['models']. '/base.php');
 
 class User_model extends Base_model
 {
-	private $logged_in;
 	private $user;
 	private $error_message;
 
 	public $verification_code;
 
+	const ADMIN_ROLE = 1;
+
 	const STATEMENT_GET_USER = 'SELECT * FROM Users WHERE email=:email LIMIT 1';
 	const STATEMENT_GET_VALIDATION = 'SELECT * FROM EmailVerifications WHERE code=:code LIMIT 1';
 	const STATEMENT_GET_PASSWORD_RESET = 'SELECT * FROM PasswordResets WHERE secret=:secret LIMIT 1';
+	const STATEMENT_DELETE_PASSWORD_RESET = 'DELETE FROM PasswordResets WHERE secret=:secret';
 	const STATEMENT_INSERT_PASSWORD_RESET = 'INSERT INTO PasswordResets(time, secret, email) VALUES (:time, :secret, :email)';
 	const STATEMENT_INSERT_USER = 'INSERT INTO Users(email, password, salt) VALUES (:email, :password, :salt)';
 	const STATEMENT_INSERT_VERIFICATION = 'INSERT INTO EmailVerifications(code, email) VALUES (:code, :email)';
-	// const STATEMENT_UPDATE_USER = 'UPDATE * Users SET WHERE id=:id LIMIT 1';
-
-
-const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:password WHERE email=:email LIMIT 1';
-
+	const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:password WHERE email=:email LIMIT 1';
 
 	const ERROR_DATABASE = 'A database error occured';
 	const ERROR_INVALID_EMAIL = 'The email address is not valid.';
@@ -61,13 +59,27 @@ const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:p
 
 		if( password_verify($password. $this->user['salt'], $this->user['password']) )
 		{
-			$this->logged_in = TRUE;
+			$_SESSION['user']['logged_in'] = TRUE;
+			$_SESSION['user']['last_activity'] = time();
+
+			if( (int)$this->user['role'] === self::ADMIN_ROLE )
+			{
+				$_SESSION['user']['is_admin'] = TRUE;
+			}else{
+				$_SESSION['user']['is_admin'] = FALSE;
+			}
 			return TRUE;
+
 		}else{
 			array_push($this->error_message, self::ERROR_LOGIN);
 			return FALSE;
 		}
 
+	}
+
+	public function logout()
+	{
+		$this->destroy_session();
 	}
 
 	public function register($email, $password_1, $password_2)
@@ -126,7 +138,7 @@ const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:p
 		$statement = $this->db->prepare(self::STATEMENT_INSERT_PASSWORD_RESET);
 		if($statement->execute($params))
 		{
-			return $GLOBALS['config']['update_password_page'] ."/$params[secret]";
+			return $GLOBALS['config']['site_root_url'] ."/user/update-password/$params[secret]";
 		}
 		return FALSE;
 	}
@@ -169,6 +181,9 @@ const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:p
 			array_push($this->error_message, self::ERROR_DATABASE);
 			return FALSE;	
  		}
+
+ 		$statement = $this->db->prepare(self::STATEMENT_DELETE_PASSWORD_RESET);
+ 		$statement->execute(array('secret' => $secret));
 
  		return TRUE;
 	}
@@ -223,9 +238,6 @@ const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:p
 	{
 		require_once($GLOBALS['config']['lib']. '/password.php');
 		return password_hash($password. $salt, PASSWORD_BCRYPT);
-		// return hash('md5', crypt($password, $salt));
-		// return md5(crypt($password, $salt));
-		// return md5(crypt($password, $salt));
 	}
 
 	private function set_user($email)
@@ -286,6 +298,30 @@ const STATEMENT_UPDATE_USER_PASSWORD = 'UPDATE Users SET salt=:salt, password=:p
 		}
 
 		return $valid;
+	}
 
+/********************************************************************************
+
+					HELPERS
+
+********************************************************************************/
+
+	protected function destroy_session()
+	{
+		// Unset all of the session variables.
+		$_SESSION = array();
+
+		// If it's desired to kill the session, also delete the session cookie.
+		// Note: This will destroy the session, and not just the session data!
+		if (ini_get("session.use_cookies")) {
+		    $params = session_get_cookie_params();
+		    setcookie(session_name(), '', time() - 42000,
+		        $params["path"], $params["domain"],
+		        $params["secure"], $params["httponly"]
+		    );
+		}
+
+		// Finally, destroy the session.
+		session_destroy();
 	}
 }
