@@ -1,14 +1,24 @@
 <?php
 
-require_once($GLOBALS['config']['views']. '/_head.php');
+if( !View::$template_called )
+{
+	View::include_template('__admin_main.php', __FILE__);
+	return;
+}
+
+$warning_message = 'Are you sure you want to delete: '. View::$data['product']['name']. '?';
 
 ?>
 
-<p>Are you sure you want to delete: <i><?php echo $_product['name'] ?></b></i></p>
+<div class="small-12 medium-8 large-6 small-centered columns" id="small-page-wrap">
 
-<form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/delete-product'; ?>" method="post">
-	<input type="hidden" name="id" value="<?php echo $_product['id'] ?>" />
-	<input type="submit" value="yes" />
-</form>
+	<?php View::make_alert($warning_message, 'warning'); ?>
 
-<p><a href="<?php echo $GLOBALS['config']['site_root_url']. '/admin/products'; ?>">cancel</a></p>
+	<form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/delete-product'; ?>" method="post">
+		<input type="hidden" name="id" value="<?php echo View::$data['product']['id']; ?>" />
+		<input class="button small radius" type="submit" value="yes">
+		<p><a href="<?php echo $GLOBALS['config']['site_root_url']. '/admin/products'; ?>">cancel</a></p>
+	</form>
+	
+
+</div>

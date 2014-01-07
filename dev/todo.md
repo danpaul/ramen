@@ -1,7 +1,8 @@
 todo:
 
+update taxonomies view/view data
 
-add admin login
+merge product add/edit
 
 add image upload to product
 

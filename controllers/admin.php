@@ -17,6 +17,11 @@ class Admin_controller extends Base_controller
 		$this->admin_check();
 	}
 
+	public function get_home()
+	{
+		require_once($GLOBALS['config']['views']. '/admin_home.php');
+	}
+
 /*******************************************************************************
 
 					PRODUCTS
@@ -27,7 +32,7 @@ class Admin_controller extends Base_controller
 	{
 		require_once $GLOBALS['config']['models']. '/product.php';
 		$product = new Product_model();
-		$_products = $product->get_products();
+		View::$data['products'] = $product->get_products();
 		require_once($GLOBALS['config']['views']. '/admin_product_all.php');
 	}
 
@@ -35,8 +40,10 @@ class Admin_controller extends Base_controller
 	{
 		require_once $GLOBALS['config']['models']. '/taxonomy.php';
 		$taxonomy = new Taxonomy_model();
-		$_categories = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
-		$_tags = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
+		// $_categories = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
+		View::$data['categories'] = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
+		View::$data['tags'] = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
+		// $_tags = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
 
 		require_once($GLOBALS['config']['views']. '/admin_product_add.php');
 	}
@@ -62,13 +69,12 @@ class Admin_controller extends Base_controller
 		$product = new Product_model();
 		$taxonomy = new Taxonomy_model();
 
-		$_product = $product->get_product($id);
-		$_product_tags = $product->get_product_tags($id);
-		$_product_categories = $product->get_product_categories($id);
+		View::$data['product'] = $product->get_product($id);
+		View::$data['product_tags'] = $product->get_product_tags($id);
+		View::$data['product_categories'] = $product->get_product_categories($id);
 
-		$_categories = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
-		$_category_list = $taxonomy->get_category_list(self::PRODUCT_CATEGORY_TYPE);
-		$_tags = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
+		View::$data['categories'] = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
+		View::$data['tags'] = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
 
 		require_once($GLOBALS['config']['views']. '/admin_product_edit.php');
 	}
@@ -99,7 +105,7 @@ class Admin_controller extends Base_controller
 	{
 		require_once $GLOBALS['config']['models']. '/product.php';
 		$product = new Product_model();
-		$_product = $product->get_product($id);
+		View::$data['product'] = $product->get_product($id);
 		require_once($GLOBALS['config']['views']. '/admin_product_delete.php');
 	}
 

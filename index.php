@@ -6,7 +6,6 @@ require_once 'config.php';
 $params = explode_url();
 
 
-
 switch($_SERVER['REQUEST_METHOD'])
 {
 
@@ -30,6 +29,7 @@ switch($_SERVER['REQUEST_METHOD'])
 			case 'admin':
 				require_once($config['controllers']. '/admin.php');
 				$admin =new Admin_controller();
+
 				switch(get_param($params, 1))
 				{
 					case 'add-product':					
@@ -47,7 +47,11 @@ switch($_SERVER['REQUEST_METHOD'])
 					case 'taxonomies':
 						$admin->get_taxonomies();
 						goto end;
+					default:
+						$admin->get_home();
+						goto end;
 				}
+
 				goto end;
 
 			case 'error':

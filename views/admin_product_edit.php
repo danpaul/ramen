@@ -1,83 +1,39 @@
 <?php
 
-require_once($GLOBALS['config']['views']. '/_head.php');
-
-?>
-
-
-<?php
-
-function display_categories($categories, &$product_categories, $top_level = TRUE){
-
-	echo '<ul>';
-		foreach ($categories as $category_data) {
-			if( ($top_level && $category_data['parent'] ===  NULL) || !$top_level )
-			{
-				$checked = '';
-
-				if( in_array($category_data['id'], $product_categories) )
-				{
-					$checked = 'checked="true"';
-				}
-
-				echo '<li>';
-					echo '<input type="checkbox" name="categories['. $category_data['id']. ']" id="category_'. $category_data['id']. '"  value="'. $category_data['id']. '" '. $checked. '/>';
-					echo '<label for="category_'. $category_data['id']. '">';
-						echo $category_data['name'];
-					echo '</label>';
-
-					if( !empty($category_data['subcategories']) )
-					{
-						display_categories($category_data['subcategories'], $product_categories, FALSE);
-					}
-				echo '</li>';
-			}
-		}
-	echo '</ul>';
+if( !View::$template_called )
+{
+	View::include_template('__admin_main.php', __FILE__);
+	return;
 }
 
 ?>
 
-<h1>edit product</h1>
-<form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/edit-product/'. $_product['id']; ?>" method="post">
-	Name: <input type="text" name="product[name]" value="<?php echo $_product['name']; ?>"><br>
-	Description: <textarea name="product[description]"><?php echo $_product['description']; ?></textarea><br>
-	Price: <input type="text" name="product[price]" value="<?php echo $_product['price']; ?>"><br>
-	Inventory: <input type="text" name="product[inventory]" value="<?php echo $_product['inventory']; ?>"><br>
-	<br>
+	
+<form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/edit-product/'. View::$data['product']['id']; ?>" method="post">
+	<div class="small-12 columns">
+		<h2>Edit <?php echo View::$data['product']['name']; ?>: </h2>
+	</div>
+	<div class="small-12 medium-8 large-9 columns">
+		Name: <input type="text" name="product[name]" value="<?php echo View::$data['product']['name']; ?>"><br>
+		Description: <textarea name="product[description]"><?php echo View::$data['product']['description']; ?></textarea><br>
+		Price: <input type="text" name="product[price]" value="<?php echo View::$data['product']['price']; ?>"><br>
+		Inventory: <input type="text" name="product[inventory]" value="<?php echo View::$data['product']['inventory']; ?>">
+		<input class="button small radius" type="submit" value="Submit">
+	</div>
 
-	<h2>categories:</h2>
+	<div class="small-12 medium-4 large-3 columns">
 
-	<?php display_categories($_categories, $_product_categories); ?>
 
-	<h2>tags:</h2>
+		<h3>Categories:</h3>
 
-	<?php foreach ($_tags as $type => $members) { ?>
+		<?php View::display_categories(View::$data['categories'], View::$data['product_categories']); ?>
 
-		<h3>Type: <?php echo $type ?></h3>
-		<ul>
-			<?php foreach ($members as $tag) {
-				$checked = FALSE;
+		<hr>
 
-				if( in_array($tag['id'], $_product_tags) )
-				{
-					$checked = TRUE;
-				}
+		<h3>Tags:</h3>
 
-				?>
-				<li>
+		<?php View::display_tags() ?>
 
-					<input type="checkbox" <?php if( $checked ){ echo 'checked="TRUE"';} ?> name="tags[<?php echo $tag['id']; ?>]" id="<?php echo 'tag_'. $tag['id']; ?>" value="<?php echo $tag['id'] ?>"/>
-					<label for="<?php echo 'tag_'. $tag['id']; ?>">
-						<?php echo $tag['name']; ?>
-					</label>
-				</li>
-
-			<?php } ?>
-
-		</ul>
-
-	<?php } ?>
-
-	<input type="submit" value="submit"><br>
+	</div>
+	
 </form>
