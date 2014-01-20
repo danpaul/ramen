@@ -80,6 +80,7 @@ $config['models'] = $config['site_root_path']. '/models';
 $config['views'] = $config['site_root_path']. '/views';
 $config['content'] = $config['site_root_path']. '/content';
 $config['lib'] = $config['site_root_path']. '/lib';
+$config['upload_path'] = $config['site_root_path']. '/assets/uploads';
 
 //URLS
 $config['assets_root_url'] = $config['site_root_url']. '/assets';

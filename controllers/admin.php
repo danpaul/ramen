@@ -40,11 +40,8 @@ class Admin_controller extends Base_controller
 	{
 		require_once $GLOBALS['config']['models']. '/taxonomy.php';
 		$taxonomy = new Taxonomy_model();
-		// $_categories = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
 		View::$data['categories'] = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
 		View::$data['tags'] = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
-		// $_tags = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
-
 		require_once($GLOBALS['config']['views']. '/admin_product_add.php');
 	}
 
@@ -92,10 +89,8 @@ class Admin_controller extends Base_controller
 		if( $product->edit($id, $_POST['product'], $categories, $tags) )
 		{
 			$_SESSION['flash_message'] = array(self::SUCCESS_RECORD_SAVE);
-			header('Location: '. $GLOBALS['config']['site_root_url']. '/admin/products');
-		
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/admin/products');		
 		}else{
-
 			$_SESSION['flash_message'] = array(self::ERROR_RECORD_SAVE);
 			header('Location: '. $GLOBALS['config']['error_page']);
 		}
@@ -119,6 +114,13 @@ class Admin_controller extends Base_controller
 		}else{
 			echo self::ERROR_RECORD_SAVE;
 		}
+	}
+
+	public function upload()
+	{
+		require_once $GLOBALS['config']['models']. '/upload.php';
+		$upload = new Upload_model();
+		$upload->upload_file();
 	}
 
 /*******************************************************************************

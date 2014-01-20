@@ -39,7 +39,6 @@ class User_model extends Base_model
 
 	public function __construct()
 	{
-		$this->logged_in = FALSE;
 		$this->user = NULL;
 		$this->error_message = array();
 		$this->verification_code = NULL;

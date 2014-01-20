@@ -14,11 +14,11 @@ if( !View::$template_called )
 	</div>
 
 	<div class="small-12 medium-8 large-9 columns">
-		Name: <input type="text" name="product[name]"><br>
-		Description: <textarea name="product[description]"></textarea>
+		<label>Name</label><input type="text" name="product[name]"><br>
+		<label>Description</label><textarea name="product[description]"></textarea>
 		<br>
-		Price: <input type="text" name="product[price]"><br>
-		Inventory: <input type="text" name="product[inventory]"><br>
+		<label>Price</label><input type="text" name="product[price]"><br>
+		<label>Inventory</label><input type="text" name="product[inventory]"><br>
 		<input class="button small radius" type="submit" value="Submit">
 	</div>
 
@@ -35,3 +35,5 @@ if( !View::$template_called )
 	</div>
 
 </form>
+
+<?php require_once($GLOBALS['config']['views']. '/_upload.php'); ?>

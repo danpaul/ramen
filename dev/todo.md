@@ -1,5 +1,7 @@
 todo:
 
+make login pages and actions https
+
 update taxonomies view/view data
 
 merge product add/edit

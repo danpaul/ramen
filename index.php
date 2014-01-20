@@ -169,6 +169,9 @@ switch($_SERVER['REQUEST_METHOD'])
 					case 'taxonomy-rename-tag':
 						$admin->rename_tag();
 						goto end;
+					case 'upload':
+						$admin->upload();
+						goto end;
 				}
 			case 'user':
 				require_once($config['controllers']. '/user.php');
