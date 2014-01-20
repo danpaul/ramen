@@ -17,6 +17,7 @@ class Product_model extends Base_model
 
 	const STATEMENT_INSERT_PRODUCT_TAG = 'INSERT INTO ProductTags(product_id, tag_id) VALUES (:product_id, :tag_id)';
 	const STATEMENT_INSERT_PRODUCT_CATEGORY = 'INSERT INTO ProductCategories(product_id, category_id) VALUES (:product_id, :category_id)';
+	const STATEMENT_INSERT_PRODUCT_IMAGE = 'INSERT INTO ProductImages(product_id, file_name) VALUES (:product_id, :file_name)';
 
 	const STATEMENT_SELECT_PRODUCT_TAGS = 'SELECT * FROM ProductTags WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_CATEGORIES = 'SELECT * FROM ProductCategories WHERE product_id=:product_id';
@@ -35,6 +36,7 @@ class Product_model extends Base_model
 
 	public function add_product($product_details)
 	{
+
 		$product_details = $this->type_set_params($product_details);
 
 		$product = $this->type_set_params($product_details['product']);
@@ -43,6 +45,11 @@ class Product_model extends Base_model
 		if( !$statement->execute($product) ){ return FALSE; }
 
 		$product_id = $this->db->lastInsertId();
+
+		if( isset($product_details['uploads']) )
+		{
+			$this->add_product_images($product_details['uploads'], $product_id);
+		}
 
 		if( !empty($product_details['tags']) )
 		{
@@ -68,6 +75,16 @@ class Product_model extends Base_model
 			}
 		}
 		return TRUE;
+	}
+
+	protected function add_product_images(&$files, $product_id)
+	{
+		$statement = $this->db->prepare(self::STATEMENT_INSERT_PRODUCT_IMAGE);
+
+		foreach($files as $file_name)
+		{
+			$statement->execute(array('product_id' => $product_id, 'file_name' => $file_name));
+		}
 	}
 
 	public function edit($id, $product_params, $categories, $tags)

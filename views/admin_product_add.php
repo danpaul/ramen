@@ -8,7 +8,7 @@ if( !View::$template_called )
 
 ?>
 
-<form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/add-products'; ?>" method="post">
+<form id="add_product_form" action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/add-products'; ?>" method="post">
 	<div class="small-12 columns">
 		<h2>Add new product: </h2>
 	</div>

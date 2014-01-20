@@ -116,4 +116,13 @@ CREATE TABLE IF NOT EXISTS ProductCategories
 	FOREIGN KEY (product_id) REFERENCES Products(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS ProductImages
+(
+	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	featured tinyint NOT NULL DEFAULT 0,
+	file_name varchar(64) NOT NULL,
+	product_id int NOT NULL,
+	FOREIGN KEY (product_id) REFERENCES Products(id)
+);
+
 ALTER TABLE Users ADD salt VARCHAR(32) NOT NULL;
