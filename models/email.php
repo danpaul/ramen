@@ -1,6 +1,8 @@
 <?php
 
-class Email
+require_once($GLOBALS['config']['models']. '/base.php');
+
+class Email extends Base_model
 {
 	private $to_email;
 
@@ -9,6 +11,7 @@ class Email
 	public function __construct($to_email_in)
 	{
 		$this->to_email = $to_email_in;
+		parent::__construct();
 	}
 
 	public function send_password_reset($url)

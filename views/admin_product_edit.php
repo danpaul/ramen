@@ -6,9 +6,12 @@ if( !View::$template_called )
 	return;
 }
 
+echo var_dump(View::$data['images']);
+die();
+
 ?>
 
-	
+
 <form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/edit-product/'. View::$data['product']['id']; ?>" method="post">
 	<div class="small-12 columns">
 		<h2>Edit <?php echo View::$data['product']['name']; ?>: </h2>

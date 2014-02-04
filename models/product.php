@@ -6,6 +6,7 @@ class Product_model extends Base_model
 {
 	const STATEMENT_GET_PRODUCT = 'SELECT * FROM Products WHERE id=:id LIMIT 1';
 	const STATEMENT_GET_PRODUCTS = 'SELECT * FROM Products';
+	const STATEMENT_GET_PRODUCT_IMAGE_NAMES = 'SELECT * FROM ProductImages WHERE product_id=?';
 	const STATEMENT_SELECT_WHERE_PART = 'SELECT * FROM ProductCategories JOIN Products ON ProductCategories.product_id = Products.id WHERE';
 
 	const STATEMENT_DELETE_PRODUCT = 'DELETE FROM Products WHERE id=:id';
@@ -101,6 +102,13 @@ class Product_model extends Base_model
 	{
 		$statement = $this->db->prepare(self::STATEMENT_GET_PRODUCT);
 		$statement->execute(array('id' => $id));
+		return $statement->fetch(PDO::FETCH_ASSOC);
+	}
+
+	public function get_product_images($id)
+	{
+		$statement = $this->db->prepare(self::STATEMENT_GET_PRODUCT_IMAGE_NAMES);
+		$statement->execute(array($id));
 		return $statement->fetch(PDO::FETCH_ASSOC);
 	}
 

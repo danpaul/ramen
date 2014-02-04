@@ -54,7 +54,6 @@ class View
 
 	public static function display_tags()
 	{
-
 		foreach (View::$data['tags'] as $type => $members)
 		{
 			echo '<h4>Type: '. $type. '</h4>';
@@ -77,9 +76,7 @@ class View
 
 				}
 			echo '</ul>';
-
 		}
-
 	}
 
 }

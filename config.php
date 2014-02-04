@@ -86,5 +86,6 @@ $config['upload_path'] = $config['site_root_path']. '/assets/uploads';
 $config['assets_root_url'] = $config['site_root_url']. '/assets';
 $config['error_page'] = $config['site_root_url']. '/error';
 
-
+//Image sizes
+$config['image_widths'] = array(150, 300, 600, 'full');
 
