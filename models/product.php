@@ -109,7 +109,7 @@ class Product_model extends Base_model
 	{
 		$statement = $this->db->prepare(self::STATEMENT_GET_PRODUCT_IMAGE_NAMES);
 		$statement->execute(array($id));
-		return $statement->fetch(PDO::FETCH_ASSOC);
+		return $statement->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function get_products_in_category($category_name)

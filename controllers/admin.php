@@ -68,13 +68,15 @@ class Admin_controller extends Base_controller
 		$taxonomy = new Taxonomy_model();
 		$upload = new Upload_model();
 
-echo var_dump($upload->get_sized_image('dEqNPDB 2.jpg', 25));
-die();
-
 		View::$data['product'] = $product->get_product($id);
 		View::$data['product_tags'] = $product->get_product_tags($id);
 		View::$data['product_categories'] = $product->get_product_categories($id);
+
 		View::$data['images'] = $product->get_product_images($id);
+		View::$data['upload_model'] = $upload;
+
+// echo var_dump(View::$data['images']);
+// die();
 
 		View::$data['categories'] = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
 		View::$data['tags'] = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);

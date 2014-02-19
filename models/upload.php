@@ -20,13 +20,8 @@ class Upload_model extends Base_model
 
 	public function upload_file()
 	{
-
-// echo($this->get_sized_image($_FILES['file']['name'], 75));
-// die();
-
 		$file_path = $GLOBALS['config']['upload_path']. '/full/'. $_FILES['file']['name'];
 		move_uploaded_file($_FILES['file']['tmp_name'], $file_path);
-		// $this->resize_images($file_path, $_FILES['file']['name']);
 	}
 
 	protected function clear_old_images($file_name)
@@ -49,39 +44,6 @@ class Upload_model extends Base_model
 		}
 		return TRUE;
 	}
-
-	// protected function resize_images($file_path, $file_name)
-	// {
-	// 	$resizer = new resize($file_path);
-	// 	foreach($GLOBALS['config']['image_widths'] as $width)
-	// 	{
-	// 		if( $width !== 'full' )
-	// 		{
-	// 			$path = $GLOBALS['config']['upload_path']
-	// 						. '/'. $width. '/'. $file_name;
-	// 			$resizer->resizeImage($width, 0, 'landscape');
-	// 			$resizer->saveImage($path, 100);
-	// 		}
-	// 	}
-	// }
-
-	// protected function make_upload_paths()
-	// {
-	// 	foreach($GLOBALS['config']['image_widths'] as $width)
-	// 	{
-	// 		$path = $GLOBALS['config']['upload_path']. '/'. $width;
-	// 		if( !file_exists($path) )
-	// 		{
-	// 			mkdir($path, 0774, TRUE);
-	// 		}
-	// 	}
-	// }
-
-	// protected function make_upload_path($folder)
-	// {
-	// 	$path = $GLOBALS['config']['upload_path']. '/'. (string)$width;
-
-	// }
 
 	public function get_sized_image($image_name, $width)
 	{
