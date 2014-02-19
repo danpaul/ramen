@@ -6,8 +6,8 @@ if( !View::$template_called )
 	return;
 }
 
-echo var_dump(View::$data['images']);
-die();
+// echo var_dump(View::$data['images']);
+// die();
 
 ?>
 
@@ -23,6 +23,38 @@ die();
 		Inventory: <input type="text" name="product[inventory]" value="<?php echo View::$data['product']['inventory']; ?>">
 		<input class="button small radius" type="submit" value="Submit">
 	</div>
+
+	<div class="small-12 columns">
+		<table>
+			<thead>
+				<th>Featured</th>
+				<th>Image</th>
+				<th>Remove image</th>
+			</thead>
+			<tbody> <?php
+				foreach( View::$data['images'] as $image )
+				{
+					$image_path = View::$data['upload_model']->get_sized_image($image['file_name'], 250);
+					$featured_checked = '';
+					if( $image['featured'] === '1' )
+					{
+						$featured_checked = 'checked';
+					}
+					echo '<tr>';
+						echo '<td>';
+							echo '<input type=checkbox name="featured_image['. $image['id']. ']" '. $featured_checked. '/>';
+							echo '</td>';
+						echo '<td>';
+							echo '<img src="'. $image_path. '"/>';
+						echo '</td>';
+						echo '<td>';
+							echo '<input type=checkbox name="remove_image['. $image['id']. ']" />';
+						echo '</td>';
+					echo '</tr>';
+				} ?>
+			</tbody>
+	</div>
+
 
 	<div class="small-12 medium-4 large-3 columns">
 
