@@ -3,13 +3,12 @@
 require_once($GLOBALS['config']['models']. '/base.php');
 require_once($GLOBALS['config']['lib']. '/resize.php');
 
-//new upload of same file name should clear all other sized images
-
 /******************************************************************************/
 
 class Upload_model extends Base_model
 {
 	const FULL_IMAGE_DIRECTORY = 'full';
+	const STATEMENT_INSERT_PRODUCT_IMAGE = 'INSERT INTO ProductImages(product_id, file_name) VALUES (:product_id, :file_name)';
 
 	private $image_widths;
 
@@ -20,8 +19,21 @@ class Upload_model extends Base_model
 
 	public function upload_file()
 	{
-		$file_path = $GLOBALS['config']['upload_path']. '/full/'. $_FILES['file']['name'];
-		move_uploaded_file($_FILES['file']['tmp_name'], $file_path);
+		if( $this->add_product_image($_FILES['file']['name']) )
+		{
+			$image_id = $this->db->lastInsertId();
+			$file_path = $GLOBALS['config']['upload_path']. '/full/'. $image_id;
+			move_uploaded_file($_FILES['file']['tmp_name'], $file_path);
+			echo json_encode($image_id);
+		}else{
+			echo json_encode(FALSE);
+		}
+	}
+
+	protected function add_product_image($file_name)
+	{
+		$statement = $this->db->prepare(self::STATEMENT_INSERT_PRODUCT_IMAGE);
+		return($statement->execute(array('product_id' => NULL, 'file_name' => $file_name)));
 	}
 
 	protected function clear_old_images($file_name)

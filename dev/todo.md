@@ -1,5 +1,15 @@
 todo:
 
+add ability to share images/get images from media library
+
+add media page where you can delete images
+
+remove image from upload if error or find out how to signal error to dropzone
+
+fix login
+	-redirect to admin after logging in
+	-when refreshing on protected page after session times out, does not redirect, just displays blank page
+
 make login pages and actions https
 
 update taxonomies view/view data

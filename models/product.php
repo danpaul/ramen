@@ -15,11 +15,11 @@ class Product_model extends Base_model
 
 	const STATEMENT_INSERT_PRODUCT = 'INSERT INTO Products(name, description, price, inventory) VALUES (:name, :description, :price, :inventory)';
 	const STATEMENT_UPDATE_PRODUCT = 'UPDATE Products SET name=:name, description=:description, price=:price, inventory=:inventory WHERE id=:id';
+	const STATEMENT_UPDATE_PRODUCT_IMAGE = 'UPDATE ProductImages SET product_id=:product_id WHERE id=:id';
 
 	const STATEMENT_INSERT_PRODUCT_TAG = 'INSERT INTO ProductTags(product_id, tag_id) VALUES (:product_id, :tag_id)';
 	const STATEMENT_INSERT_PRODUCT_CATEGORY = 'INSERT INTO ProductCategories(product_id, category_id) VALUES (:product_id, :category_id)';
-	const STATEMENT_INSERT_PRODUCT_IMAGE = 'INSERT INTO ProductImages(product_id, file_name) VALUES (:product_id, :file_name)';
-
+	
 	const STATEMENT_SELECT_PRODUCT_TAGS = 'SELECT * FROM ProductTags WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_CATEGORIES = 'SELECT * FROM ProductCategories WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_CATEGORY_IDS = 'SELECT category_id FROM ProductCategories WHERE product_id=:product_id';
@@ -78,13 +78,12 @@ class Product_model extends Base_model
 		return TRUE;
 	}
 
-	protected function add_product_images(&$files, $product_id)
+	protected function add_product_images(&$upload_ids, $product_id)
 	{
-		$statement = $this->db->prepare(self::STATEMENT_INSERT_PRODUCT_IMAGE);
-
-		foreach($files as $file_name)
+		$statement = $this->db->prepare(self::STATEMENT_UPDATE_PRODUCT_IMAGE);
+		foreach($upload_ids as $id)
 		{
-			$statement->execute(array('product_id' => $product_id, 'file_name' => $file_name));
+			$statement->execute(array('product_id' => $product_id, 'id' => $id));
 		}
 	}
 

@@ -74,14 +74,8 @@ class Admin_controller extends Base_controller
 
 		View::$data['images'] = $product->get_product_images($id);
 		View::$data['upload_model'] = $upload;
-
-// echo var_dump(View::$data['images']);
-// die();
-
 		View::$data['categories'] = $taxonomy->get_categories(self::PRODUCT_CATEGORY_TYPE);
 		View::$data['tags'] = $taxonomy->get_tags(self::PRODUCT_CATEGORY_TYPE);
-
-
 
 		require_once($GLOBALS['config']['views']. '/admin_product_edit.php');
 	}
@@ -89,6 +83,9 @@ class Admin_controller extends Base_controller
 
 	public function post_edit_product($id)
 	{
+
+echo var_dump($_POST);
+die();
 
 		$categories = isset($_POST['categories']) ? $_POST['categories'] : array();
 		$tags = isset($_POST['tags']) ? $_POST['tags'] : array();

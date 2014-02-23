@@ -49,7 +49,12 @@ class User_controller extends Base_controller
 		View::$data['action'] = $action;
 		if($this->user->login($_POST['email'], $_POST['password']))
 		{
-			header('Location: '. $GLOBALS['config']['site_root_url']);
+			if($this->user_is_admin())
+			{
+				header('Location: '. $GLOBALS['config']['site_root_url']. '/admin');
+			}else{
+				header('Location: '. $GLOBALS['config']['site_root_url']);
+			}
 		}else{
 			//set the error messages and redirect
 			$_SESSION['flash_message'] = $this->user->get_error_messages();
