@@ -9,6 +9,7 @@ class Upload_model extends Base_model
 {
 	const FULL_IMAGE_DIRECTORY = 'full';
 	const STATEMENT_INSERT_PRODUCT_IMAGE = 'INSERT INTO ProductImages(product_id, file_name) VALUES (:product_id, :file_name)';
+	const STATEMENT_SELECT_PRODUCT_IMAGE = 'SELECT * FROM ProductImages WHERE id=:id';
 
 	private $image_widths;
 
@@ -57,6 +58,17 @@ class Upload_model extends Base_model
 			}
 		}
 		return TRUE;
+	}
+
+	public function delete_image($image_id)
+	{
+		$statement = $this->db->prepare(self::STATEMENT_SELECT_PRODUCT_IMAGE);
+		if( !$statement->execute(array('id' => $image_id)) )
+		{
+			throw new Exception("Unable to fetch image in upload.php", 1);			
+		}
+		$image = $statement->fetch(PDO::FETCH_ASSOC);
+		$this->clear_old_images($this->get_internal_image_name($image));
 	}
 
 	public function get_sized_image($image_array, $width)

@@ -10,9 +10,7 @@
 	Dropzone.options.myAwesomeDropzone = {
 	  init: function() {
 	    this.on("addedfile", function(file) {
-	    	// $('#add_product_form').append(
-	    	// 	'<input type="hidden" name=uploads[] value="' + file.name + '">'
-	    	// );
+
 	    });
 	    this.on("success", function(file, response){
 	    	response = $.parseJSON(response);
@@ -23,7 +21,6 @@
 	    	}else{
 	    		console.log('ERROR uploading image.')
 	    	}
-// console.log(response);
 	    });
 	  }
 	};

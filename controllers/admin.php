@@ -83,23 +83,31 @@ class Admin_controller extends Base_controller
 
 	public function post_edit_product($id)
 	{
-
-echo var_dump($_POST);
-die();
-
 		$categories = isset($_POST['categories']) ? $_POST['categories'] : array();
 		$tags = isset($_POST['tags']) ? $_POST['tags'] : array();
 
 		require_once $GLOBALS['config']['models']. '/product.php';
 		$product = new Product_model();
 
+		if( isset($_POST['remove_image']) )
+		{
+			$product->delete_images($id, array_keys($_POST['remove_image']));
+		}
+
+		if( isset($_POST['featured_image']) )
+		{
+			$product->set_featured_image($id, key($_POST['featured_image']));
+		}
+
 		if( $product->edit($id, $_POST['product'], $categories, $tags) )
 		{
 			$_SESSION['flash_message'] = array(self::SUCCESS_RECORD_SAVE);
-			header('Location: '. $GLOBALS['config']['site_root_url']. '/admin/products');		
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/admin/products');
+			exit();
 		}else{
 			$_SESSION['flash_message'] = array(self::ERROR_RECORD_SAVE);
 			header('Location: '. $GLOBALS['config']['error_page']);
+			exit();
 		}
 	}
 

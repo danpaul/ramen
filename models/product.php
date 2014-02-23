@@ -12,10 +12,13 @@ class Product_model extends Base_model
 	const STATEMENT_DELETE_PRODUCT = 'DELETE FROM Products WHERE id=:id';
 	const STATEMENT_DELETE_PRODUCT_CATEGORIES = 'DELETE FROM ProductCategories WHERE product_id=:product_id';
 	const STATEMENT_DELETE_PRODUCT_TAGS = 'DELETE FROM ProductTags WHERE product_id=:product_id';
+	const STATEMENT_DELETE_PRODUCT_IMAGE = 'DELETE FROM ProductImages WHERE id=:id';
 
 	const STATEMENT_INSERT_PRODUCT = 'INSERT INTO Products(name, description, price, inventory) VALUES (:name, :description, :price, :inventory)';
 	const STATEMENT_UPDATE_PRODUCT = 'UPDATE Products SET name=:name, description=:description, price=:price, inventory=:inventory WHERE id=:id';
 	const STATEMENT_UPDATE_PRODUCT_IMAGE = 'UPDATE ProductImages SET product_id=:product_id WHERE id=:id';
+	const STATEMENT_UPDATE_PRODUCT_FEATURED_IMAGE = 'UPDATE ProductImages SET featured=:featured WHERE product_id=:product_id';
+	const STATEMENT_UPDATE_FEATURED_IMAGE = 'UPDATE ProductImages SET featured=:featured WHERE id=:id';
 
 	const STATEMENT_INSERT_PRODUCT_TAG = 'INSERT INTO ProductTags(product_id, tag_id) VALUES (:product_id, :tag_id)';
 	const STATEMENT_INSERT_PRODUCT_CATEGORY = 'INSERT INTO ProductCategories(product_id, category_id) VALUES (:product_id, :category_id)';
@@ -215,6 +218,36 @@ class Product_model extends Base_model
 	{
 		$statement = $this->db->prepare(self::STATEMENT_DELETE_PRODUCT);
 		return $statement->execute(array('id' => $id));
+	}
+
+	public function set_featured_image($product_id, $featured_image_id)
+	{		
+
+		$statement = $this->db->prepare(self::STATEMENT_UPDATE_PRODUCT_FEATURED_IMAGE);
+		if( !$statement->execute(array('featured' => 0, 'product_id' => $product_id)) )
+		{
+			throw new Exception("Error updating featured image.");			
+		};
+		$statement = $this->db->prepare(self::STATEMENT_UPDATE_FEATURED_IMAGE);
+		if( !$statement->execute(array('featured' => 1, 'id' => $featured_image_id)) )		
+		{
+			throw new Exception("Error updating featured image.", 1);			
+		}
+	}
+
+	public function delete_images($product_id, $image_ids)
+	{
+		require_once($GLOBALS['config']['models']. '/upload.php');
+		$upload = new Upload_model();
+		foreach ($image_ids as $image_id)
+		{
+			$upload->delete_image($image_id);
+			$statement = $this->db->prepare(self::STATEMENT_DELETE_PRODUCT_IMAGE);
+			if( !$statement->execute(array('id' => $image_id)) )
+			{
+				throw new Exception("Unable to delete image.", 1);
+			}
+		}
 	}
 
 	private function type_set_params($params)
