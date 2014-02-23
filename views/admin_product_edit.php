@@ -37,7 +37,10 @@ if( !View::$template_called )
 			<tbody> <?php
 				foreach( View::$data['images'] as $image )
 				{
-					$image_path = View::$data['upload_model']->get_sized_image($image['file_name'], 250);
+// echo var_dump($image['file_name']);
+// die();
+$image_path = View::$data['upload_model']->get_sized_image($image, 250);
+					// $image_path = View::$data['upload_model']->get_sized_image($image['file_name'], 250);
 					$featured_checked = '';
 					if( $image['featured'] === '1' )
 					{

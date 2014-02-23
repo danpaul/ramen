@@ -22,7 +22,9 @@ class Upload_model extends Base_model
 		if( $this->add_product_image($_FILES['file']['name']) )
 		{
 			$image_id = $this->db->lastInsertId();
-			$file_path = $GLOBALS['config']['upload_path']. '/full/'. $image_id;
+			$ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+			$file_path = $GLOBALS['config']['upload_path']. '/full/'. $image_id. '.'. $ext;
+
 			move_uploaded_file($_FILES['file']['tmp_name'], $file_path);
 			echo json_encode($image_id);
 		}else{
@@ -57,8 +59,9 @@ class Upload_model extends Base_model
 		return TRUE;
 	}
 
-	public function get_sized_image($image_name, $width)
+	public function get_sized_image($image_array, $width)
 	{
+		$image_name = $this->get_internal_image_name($image_array);
 		$directory = $GLOBALS['config']['upload_path']. '/'. $width;
 		$sized_image = $directory. '/'. $image_name;
 		if( !file_exists($directory) )
@@ -81,5 +84,10 @@ class Upload_model extends Base_model
 			$resizer->saveImage($sized_image, 100);
 		}
 		return $GLOBALS['config']['upload_url']. '/'. $width. '/'. $image_name;
+	}
+
+	private function get_internal_image_name($image_array)
+	{ 
+		return $image_array['id']. '.'. pathinfo($image_array['file_name'], PATHINFO_EXTENSION);
 	}
 }
