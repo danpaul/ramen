@@ -8,7 +8,7 @@ class Admin_controller extends Base_controller
 	const ERROR_RECORD_SAVE = 'Sorry, there was an error saving your record.';
 	const SUCCESS_RECORD_SAVE = 'Your product has been added/updated.';
 
-	protected $tag_types = array('healthy', 'spice');
+	protected $tag_types = array('healthy', 'spice', 'product');
 
 	public function __construct()
 	{

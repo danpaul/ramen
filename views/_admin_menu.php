@@ -20,6 +20,9 @@
 					</li>
 				</ul>
 			</li>
+			<li>
+				<a href="<?php echo $GLOBALS['config']['site_root_url']. '/admin/taxonomies'; ?>">Taxonomies</a>
+			</li>
 			<li class="active">
 				<a href="<?php echo $GLOBALS['config']['site_root_url']. '/user/logout'; ?>">Logout</a>
 			</li>

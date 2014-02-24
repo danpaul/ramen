@@ -1,10 +1,19 @@
 <?php
 
+//to get sized images
+require_once($GLOBALS['config']['models']. '/upload.php');
+
 class View
 {
 	public static $template_called = FALSE;
 	public static $template_callback = NULL;
 	public static $data = array();
+	public static $upload_model;
+
+	public static function init()
+	{
+		self::$upload_model = new Upload_model();
+	}
 
 	public static function include_template($template, $callback_file)
 	{
@@ -79,4 +88,8 @@ class View
 		}
 	}
 
+	public static function get_sized_image(&$image_array, $width)
+	{
+		return self::$upload_model($image_array, $width);
+	}
 }

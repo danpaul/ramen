@@ -6,4 +6,6 @@
 		return;
 	}
 
+	require_once $GLOBALS['config']['views']. '/_product_loop.php';
+
 ?>

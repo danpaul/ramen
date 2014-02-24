@@ -5,6 +5,7 @@ class Base_controller
 	public function __construct()
 	{
 		require_once($GLOBALS['config']['views'].'/___view.php');
+		View::init();
 
 		if(session_id() == ''){ session_start(); }
 

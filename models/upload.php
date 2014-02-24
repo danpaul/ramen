@@ -71,7 +71,7 @@ class Upload_model extends Base_model
 		$this->clear_old_images($this->get_internal_image_name($image));
 	}
 
-	public function get_sized_image($image_array, $width)
+	public function get_sized_image(&$image_array, $width)
 	{
 		$image_name = $this->get_internal_image_name($image_array);
 		$directory = $GLOBALS['config']['upload_path']. '/'. $width;

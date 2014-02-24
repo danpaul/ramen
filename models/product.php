@@ -144,16 +144,29 @@ class Product_model extends Base_model
 		return $statement->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	public function get_products_in_type_by_tag($type, $tag)
+	public function add_images_to_products(&$products_array)
+	{
+		foreach ($products_array as &$product)
+		{
+			$product['images'] = $this->get_product_images($product['id']);
+		}
+	}
+
+	public function get_products_in_type_by_tag($type, $tag, $with_images = TRUE)
 	{
 		require_once($GLOBALS['config']['models']. '/taxonomy.php');
 		$taxonomy = new Taxonomy_model();
 		$tag = $taxonomy->get_tag_by_name($type, $tag);
 
 		$statement = $this->db->prepare(self::STATEMENT_SELECT_JOIN_TAG_PART. 'tag_id=:tag_id');
-		if( !$statement->execute(array('tag_id' => $tag['id'])) ){ return FALSE; }
-		return $statement->fetchAll(PDO::FETCH_ASSOC);
-
+		if( !$statement->execute(array('tag_id' => $tag['id'])) ){ throw new Exception("Error getting products by tag", 1);
+		 }
+		$products =  $statement->fetchAll(PDO::FETCH_ASSOC);
+		if( $with_images )
+		{
+			$this->add_images_to_products($products);
+		}
+		return $products;
 	}
 
 	public function get_products_by_types($types)
