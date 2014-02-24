@@ -81,7 +81,7 @@ class Product_model extends Base_model
 		return TRUE;
 	}
 
-	protected function add_product_images(&$upload_ids, $product_id)
+	public function add_product_images(&$upload_ids, $product_id)
 	{
 		$statement = $this->db->prepare(self::STATEMENT_UPDATE_PRODUCT_IMAGE);
 		foreach($upload_ids as $id)

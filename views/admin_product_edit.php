@@ -8,7 +8,7 @@ if( !View::$template_called )
 
 ?> 
 
-<form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/edit-product/'. View::$data['product']['id']; ?>" method="post">
+<form action="<?php echo $GLOBALS['config']['site_root_url']. '/admin/edit-product/'. View::$data['product']['id']; ?>" method="post" id="add_product_form">
 	<div class="small-12 columns">
 		<h2>Edit <?php echo View::$data['product']['name']; ?>: </h2>
 	</div>
@@ -64,3 +64,7 @@ $image_path = View::$data['upload_model']->get_sized_image($image, 250);
 	</div>
 	
 </form>
+
+<div class="small-12 medium-8 large-9 columns left">
+	<?php require_once($GLOBALS['config']['views']. '/_upload.php'); ?>
+</div>

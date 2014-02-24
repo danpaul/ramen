@@ -83,11 +83,11 @@ class Admin_controller extends Base_controller
 
 	public function post_edit_product($id)
 	{
-		$categories = isset($_POST['categories']) ? $_POST['categories'] : array();
-		$tags = isset($_POST['tags']) ? $_POST['tags'] : array();
-
 		require_once $GLOBALS['config']['models']. '/product.php';
+
 		$product = new Product_model();
+		$categories = isset($_POST['categories']) ? $_POST['categories'] : array();
+		$tags = isset($_POST['tags']) ? $_POST['tags'] : array();		
 
 		if( isset($_POST['remove_image']) )
 		{
@@ -97,6 +97,11 @@ class Admin_controller extends Base_controller
 		if( isset($_POST['featured_image']) )
 		{
 			$product->set_featured_image($id, key($_POST['featured_image']));
+		}
+
+		if( isset($_POST['uploads']) )
+		{
+			$product->add_product_images($_POST['uploads'], $id);
 		}
 
 		if( $product->edit($id, $_POST['product'], $categories, $tags) )
