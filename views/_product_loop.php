@@ -2,14 +2,21 @@
 
 foreach( View::$data['featured_products'] as &$product )
 {
-echo var_dump($product);
-die();
-	echo '<div class="small-12 medium-4 large-3">';
-		if( !empty($product['images']) )
+	$product_link = $GLOBALS['config']['site_root_url']. '/product/'. $product['id'];
+	$add_to_cart_link = $GLOBALS['config']['site_root_url']. '/product/add-to-cart/'. $product['id'];
+
+	echo '<div class="small-12 medium-4 large-3 columns">';
+		echo '<a href="'. $product_link. '">';
+			echo '<h3>'. $product['name']. '</h3>';
+		echo '</a>';
+		if( !empty($product['featured_image']) )
 		{
-			$featured_image = View::get_sized_image($product['featured']['id'], 150);
-echo var_dump($featured_image);
-die();
+			echo '<a href="'. $product_link. '">';
+				echo '<img src="'. View::get_sized_image($product['featured_image'], 150). '">';
+			echo '</a>';
 		}
+		echo '<p>'. $product['description']. '</p>';
+		echo '<p>'. $product['price']. '</p>';
+		echo '<a href="'. $add_to_cart_link. '" class="button small">Add to cart</a>';
 	echo '</div>';
 }

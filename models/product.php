@@ -149,6 +149,13 @@ class Product_model extends Base_model
 		foreach ($products_array as &$product)
 		{
 			$product['images'] = $this->get_product_images($product['id']);
+			foreach ($product['images'] as $image)
+			{
+				if( $image['featured'] === '1' )
+				{
+					$product['featured_image'] = $image;
+				}
+			}
 		}
 	}
 

@@ -19,7 +19,6 @@ switch($_SERVER['REQUEST_METHOD'])
 	{
 		switch($params[0])
 		{
-
 			case '':
 				require_once($config['controllers']. '/home.php');
 				$home = new Home_controller();

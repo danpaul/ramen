@@ -90,6 +90,6 @@ class View
 
 	public static function get_sized_image(&$image_array, $width)
 	{
-		return self::$upload_model($image_array, $width);
+		return self::$upload_model->get_sized_image($image_array, $width);
 	}
 }
