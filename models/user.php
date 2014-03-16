@@ -14,6 +14,7 @@ class User_model extends Base_model
 	const ADMIN_ROLE = 1;
 
 	const STATEMENT_GET_USER = 'SELECT * FROM Users WHERE email=:email LIMIT 1';
+	const STATEMENT_GET_USER_ADDRESSES = 'SELECT * FROM Addresses WHERE user_id=:user_id';
 	const STATEMENT_GET_VALIDATION = 'SELECT * FROM EmailVerifications WHERE code=:code LIMIT 1';
 	const STATEMENT_GET_PASSWORD_RESET = 'SELECT * FROM PasswordResets WHERE secret=:secret LIMIT 1';
 	const STATEMENT_DELETE_PASSWORD_RESET = 'DELETE FROM PasswordResets WHERE secret=:secret';
@@ -59,6 +60,7 @@ class User_model extends Base_model
 		if( password_verify($password. $this->user['salt'], $this->user['password']) )
 		{
 			$_SESSION['user']['logged_in'] = TRUE;
+			$_SESSION['user']['id'] = $this->user['id'];
 			$_SESSION['user']['last_activity'] = time();
 
 			if( (int)$this->user['role'] === self::ADMIN_ROLE )
@@ -216,6 +218,13 @@ class User_model extends Base_model
 		return FALSE;
 	}
 
+	public function get_addresses($user_id)
+	{
+		$statement = $this->db->prepare(self::STATEMENT_GET_USER_ADDRESSES);
+		$statement->execute(array('user_id' => $user_id));
+		return $statement->fetchAll(PDO::FETCH_ASSOC);
+	}
+
 	private function get_code($email)
 	{
 		return hash('sha256', time(). rand(). $email);
@@ -255,6 +264,8 @@ class User_model extends Base_model
 		$statement = $this->db->prepare($sql);
 		$statement->execute($data);
 	}
+
+
 
 	private function validate_registration_information($email, $password_1, $password_2)
 	{

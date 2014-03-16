@@ -6,3 +6,10 @@
 .inline{
 	display:inline
 }
+
+.product-box{
+	outline: solid red;
+	float: left !important;
+	height: 315px;
+	overflow: hidden;
+}

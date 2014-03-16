@@ -19,6 +19,15 @@ class User_controller extends Base_controller
 		parent::__construct();
 	}
 
+	public function add_address()
+	{
+		require_once($GLOBALS['config']['models']. '/address.php');
+
+		$address = new Address_model();
+		$address->add_address($_POST);
+
+	}
+
 	public function get_login($action)
 	{
 		if( $this->user_is_logged_in() )
@@ -49,6 +58,10 @@ class User_controller extends Base_controller
 		View::$data['action'] = $action;
 		if($this->user->login($_POST['email'], $_POST['password']))
 		{
+			require_once $GLOBALS['config']['models']. '/cart.php';
+			$cart = new Cart_model();
+			$cart->store_session_cart_items();
+
 			if($this->user_is_admin())
 			{
 				header('Location: '. $GLOBALS['config']['site_root_url']. '/admin');

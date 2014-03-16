@@ -3,9 +3,9 @@
 foreach( View::$data['featured_products'] as &$product )
 {
 	$product_link = $GLOBALS['config']['site_root_url']. '/product/'. $product['id'];
-	$add_to_cart_link = $GLOBALS['config']['site_root_url']. '/product/add-to-cart/'. $product['id'];
+	$add_to_cart_link = $GLOBALS['config']['site_root_url']. '/cart/add';
 
-	echo '<div class="small-12 medium-4 large-3 columns">';
+	echo '<div class="small-6 medium-4 large-3 columns product-box" >';
 		echo '<a href="'. $product_link. '">';
 			echo '<h3>'. $product['name']. '</h3>';
 		echo '</a>';
@@ -17,6 +17,10 @@ foreach( View::$data['featured_products'] as &$product )
 		}
 		echo '<p>'. $product['description']. '</p>';
 		echo '<p>'. $product['price']. '</p>';
-		echo '<a href="'. $add_to_cart_link. '" class="button small">Add to cart</a>';
+		echo '<form action="'. $add_to_cart_link .'" method="post">';
+			echo '<label>Quantity</label><input type="text" value="1" name="quantity"><br>';
+			echo '<input type="hidden" name="product_id" value="'. $product['id']. '">';
+			echo '<input class="button small radius" type="submit" value="Add To Cart">';
+		echo '</form>';
 	echo '</div>';
 }

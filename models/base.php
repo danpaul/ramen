@@ -75,4 +75,9 @@ class Base_model
 		return $questions;
 	}
 
+	protected function user_is_logged_in()
+	{
+		return( isset($_SESSION['user']['logged_in']) && $_SESSION['user']['logged_in'] === TRUE );
+	}
+
 }

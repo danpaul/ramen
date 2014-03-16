@@ -21,20 +21,18 @@ class Base_controller
 
 	}
 
-	private function check_session_expiration()
+	protected function add_flash_message($message)
 	{
-		if( $this->user_is_logged_in() )
+		if( !isset($_SESSION['flash_message']) )
 		{
-			if( time() - $_SESSION['user']['last_activity'] 
-				> $GLOBALS['config']['settings']['session_expiration'] )
-			{
-				require_once($GLOBALS['config']['models']. '/user.php');
-				$user = new User_model();
-				$user->logout();
-			}else{
-				$_SESSION['user']['last_activity'] = time();
-			}
+			$_SESSION['flash_message'] = array();
 		}
+		array_push($_SESSION['flash_message'], $message);
+	}
+
+	protected function has_cart()
+	{
+		return !empty($_SESSION['cart']);
 	}
 
 	protected function user_is_logged_in()
@@ -64,4 +62,21 @@ class Base_controller
 		}
 		return TRUE;
 	}
+
+	private function check_session_expiration()
+	{
+		if( $this->user_is_logged_in() )
+		{
+			if( time() - $_SESSION['user']['last_activity'] 
+				> $GLOBALS['config']['settings']['session_expiration'] )
+			{
+				require_once($GLOBALS['config']['models']. '/user.php');
+				$user = new User_model();
+				$user->logout();
+			}else{
+				$_SESSION['user']['last_activity'] = time();
+			}
+		}
+	}
+
 }

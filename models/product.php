@@ -28,6 +28,7 @@ class Product_model extends Base_model
 	const STATEMENT_SELECT_PRODUCT_CATEGORY_IDS = 'SELECT category_id FROM ProductCategories WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_TAG_IDS = 'SELECT tag_id FROM ProductTags WHERE product_id=:product_id';
 	const STATEMENT_SELECT_PRODUCT_IDS_BY_TAG_ID = 'SELECT product_id FROM ProductTags WHERE tag_id=:tag_id';
+	const STATEMENT_SELECT_PRODUCTS_BY_IDS = 'SELECT * FROM Products WHERE id IN (???)';
 	const STATEMENT_SELECT_JOIN_TAG_PART = 'SELECT * FROM ProductTags JOIN Products ON ProductTags.product_id = Products.id WHERE ';
 	const STATEMENT_SELECT_JOIN_TAGS = 'SELECT * FROM ProductTags JOIN Products ON ProductTags.product_id = Products.id WHERE tag_id IN (???)';
 	
@@ -96,7 +97,6 @@ class Product_model extends Base_model
 		$params['id'] = $id;
 		$statement = $this->db->prepare(self::STATEMENT_UPDATE_PRODUCT);
 		if( !$statement->execute($params) ){ return FALSE; }
-
 		return $this->update_taxonomies($id, $categories, $tags);
 	}
 
@@ -105,6 +105,18 @@ class Product_model extends Base_model
 		$statement = $this->db->prepare(self::STATEMENT_GET_PRODUCT);
 		$statement->execute(array('id' => $id));
 		return $statement->fetch(PDO::FETCH_ASSOC);
+	}
+
+	public function get_products_by_ids($id_array)
+	{
+		if( empty($id_array) ){ throw new Exception("Empty array passed to get_products_by_ids", 1);
+		}
+		$statement = str_replace('???',
+								 $this->generate_question_marks(count($id_array)),
+								 self::STATEMENT_SELECT_PRODUCTS_BY_IDS);
+		$statement = $this->db->prepare($statement);
+		$statement->execute($id_array);
+		return $statement->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	public function get_product_images($id)
@@ -200,6 +212,8 @@ class Product_model extends Base_model
 		$results = $statement->fetchAll(PDO::FETCH_ASSOC);
 		return $results;
 	}
+
+
 
 	public function get_product_tags($product_id)
 	{

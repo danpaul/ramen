@@ -5,7 +5,6 @@ require_once 'config.php';
 
 $params = explode_url();
 
-
 switch($_SERVER['REQUEST_METHOD'])
 {
 
@@ -19,6 +18,7 @@ switch($_SERVER['REQUEST_METHOD'])
 	{
 		switch($params[0])
 		{
+
 			case '':
 				require_once($config['controllers']. '/home.php');
 				$home = new Home_controller();
@@ -51,13 +51,31 @@ switch($_SERVER['REQUEST_METHOD'])
 						goto end;
 				}
 
-				goto end;
+
+			case 'cart':
+				require_once($config['controllers']. '/cart.php');
+				$cart = new Cart_controller();
+				switch(get_param($params, 1))
+				{
+					case '':
+						$cart->get_cart_order();
+						goto end;
+				}
 
 			case 'error':
 				require_once($config['controllers']. '/base.php');
 				require_once($config['views']. '/error.php');
 				goto end;
 
+			case 'order':
+				require_once($config['controllers']. '/order.php');
+				$order = new Order_controller();
+				switch(get_param($params, 1))
+				{
+					case 'checkout':
+						$order->checkout();
+						goto end;
+				}
 
 			case 'user':
 				require_once($config['controllers']. '/user.php');
@@ -172,12 +190,33 @@ switch($_SERVER['REQUEST_METHOD'])
 						$admin->upload();
 						goto end;
 				}
+			case 'cart':
+				require_once($config['controllers']. '/cart.php');
+				$cart = new Cart_controller();
+
+				switch(get_param($params, 1))
+				{
+					case 'add':
+						$cart->add();
+						goto end;
+					case 'update-item-quantity':
+						$cart->update_item_quantity(get_param($params, 2), $_POST['quantity']);
+						goto end;
+					case 'delete-item':
+						$cart->delete_item(get_param($params, 2));
+						goto end;
+				}
+
 			case 'user':
 				require_once($config['controllers']. '/user.php');
 				$user = new User_controller();
 
 				switch(get_param($params, 1))
 				{
+
+					case 'add-address':
+						$user->add_address();
+						goto end;
 					case 'login':
 						$user->post_login('login');
 						goto end;
