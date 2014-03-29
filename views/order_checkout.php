@@ -29,11 +29,11 @@
 	<div class="small-12 medium-8 large-9 columns">
 		<label>First name</label><input type="text" name="address[first_name]" required><br>
 		<label>Last name</label><input type="text" name="address[last_name]" required><br>
-		<label>Address</label><input type="text" name="address[address]" required><br>
-		<label>Apartment/suite</label><input type="text" name="address[apartment]"><br>
+		<label>Street Address</label><input type="text" name="address[address_1]" required><br>
+		<label>Apartment/suite</label><input type="text" name="address[address_2]"><br>
 		<label>City</label><input type="text" name="address[city]" required><br>
 		<label>State</label><input type="text" name="address[state]" required><br>
-		<label>Zipcode</label><input type="text" name="product[zipcode]"><br>
+		<label>Zipcode</label><input type="text" name="address[zip]"><br>
 		<input class="button small radius" type="submit" value="Submit">
 	</div>
 

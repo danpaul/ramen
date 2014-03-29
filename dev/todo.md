@@ -1,5 +1,7 @@
 todo:
 
+add front/back end validation for addresses input
+
 add ability to share images/get images from media library
 
 add media page where you can delete images

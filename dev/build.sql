@@ -21,7 +21,6 @@ CREATE TABLE IF NOT EXISTS Products
 	name varchar(255) NOT NULL DEFAULT '',
 	description text NOT NULL DEFAULT '',
 	price decimal(10, 2) NOT NULL DEFAULT 0.00,
-	-- price int NOT NULL DEFAULT 0,
 	inventory int NOT NULL DEFAULT 0
 );
 
@@ -49,6 +48,8 @@ CREATE TABLE IF NOT EXISTS CartItems
 CREATE TABLE IF NOT EXISTS Addresses
 (
 	id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	first_name varchar(32) NOT NULL DEFAULT '',
+	last_name varchar(32) NOT NULL DEFAULT '',
 	address_1 varchar(255) NOT NULL DEFAULT '',
 	address_2 varchar(255) NOT NULL DEFAULT '',
 	city varchar(64) NOT NULL DEFAULT '',

@@ -16,9 +16,7 @@ class Base_controller
 		}else{
 			$GLOBALS['FLASH_MESSAGE'] = NULL;
 		}
-
 		$this->check_session_expiration();
-
 	}
 
 	protected function add_flash_message($message)

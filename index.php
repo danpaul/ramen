@@ -64,6 +64,7 @@ switch($_SERVER['REQUEST_METHOD'])
 
 			case 'error':
 				require_once($config['controllers']. '/base.php');
+				new Base_controller();
 				require_once($config['views']. '/error.php');
 				goto end;
 

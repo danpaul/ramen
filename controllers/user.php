@@ -22,10 +22,18 @@ class User_controller extends Base_controller
 	public function add_address()
 	{
 		require_once($GLOBALS['config']['models']. '/address.php');
-
 		$address = new Address_model();
-		$address->add_address($_POST);
-
+		if( !isset($_SESSION['user']['id']) )
+		{
+			$this->add_flash_message( 'Please log in to continue.' );
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/error');
+			exit();
+		}
+		if( !$address->add_address($_POST['address'], $_SESSION['user']['id']) )
+		{
+			$this->add_flash_message( 'An error occured while adding your address. Please try again' );
+			header('Location: '. $GLOBALS['config']['site_root_url']. '/error');
+		}
 	}
 
 	public function get_login($action)
